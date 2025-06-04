@@ -306,6 +306,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Configuration endpoints
+  app.get('/api/ai/config', async (req, res) => {
+    try {
+      const settings = await storage.getBotSettings();
+      const config = {
+        // Signal Generation
+        signalConfidenceThreshold: settings.signalConfidenceThreshold || 70,
+        technicalWeight: settings.technicalWeight || 40,
+        aiWeight: settings.aiWeight || 60,
+        sentimentWeight: settings.sentimentWeight || 20,
+        volumeWeight: settings.volumeWeight || 15,
+        
+        // Risk Management
+        maxPositionSize: settings.maxPositionSize || 25,
+        stopLossPercentage: settings.stopLossPercentage || 3,
+        takeProfitPercentage: settings.takeProfitPercentage || 6,
+        maxDailyLoss: settings.maxDailyLoss || 500,
+        maxConsecutiveLosses: settings.maxConsecutiveLosses || 3,
+        
+        // Pattern Recognition
+        enablePatternLearning: settings.enablePatternLearning ?? true,
+        minPatternOccurrences: settings.minPatternOccurrences || 5,
+        patternSuccessThreshold: settings.patternSuccessThreshold || 65,
+        adaptiveLearning: settings.adaptiveLearning ?? true,
+        
+        // Market Conditions
+        enableBearMarketMode: settings.enableBearMarketMode ?? true,
+        enableBullMarketMode: settings.enableBullMarketMode ?? true,
+        volatilityAdjustment: settings.volatilityAdjustment ?? true,
+        marketRegimeDetection: settings.marketRegimeDetection ?? true,
+        
+        // Advanced Features
+        enableDynamicScaling: settings.enableDynamicScaling ?? true,
+        scalingAggression: settings.scalingAggression || 50,
+        enableEmergencyStop: settings.enableEmergencyStop ?? true,
+        emergencyStopDrawdown: settings.emergencyStopDrawdown || 10,
+
+        // Bot Identity
+        botName: settings.botName || 'BitBot Pro',
+        botPersonality: settings.botPersonality || 'professional',
+      };
+      
+      res.json(config);
+    } catch (error) {
+      console.error('Error fetching AI config:', error);
+      res.status(500).json({ error: 'Failed to fetch AI configuration' });
+    }
+  });
+
+  app.put('/api/ai/config', async (req, res) => {
+    try {
+      const config = req.body;
+      
+      // Update bot settings with new configuration
+      await storage.updateBotSettings({
+        signalConfidenceThreshold: config.signalConfidenceThreshold,
+        technicalWeight: config.technicalWeight,
+        aiWeight: config.aiWeight,
+        sentimentWeight: config.sentimentWeight,
+        volumeWeight: config.volumeWeight,
+        maxPositionSize: config.maxPositionSize,
+        stopLossPercentage: config.stopLossPercentage,
+        takeProfitPercentage: config.takeProfitPercentage,
+        maxDailyLoss: config.maxDailyLoss,
+        maxConsecutiveLosses: config.maxConsecutiveLosses,
+        enablePatternLearning: config.enablePatternLearning,
+        minPatternOccurrences: config.minPatternOccurrences,
+        patternSuccessThreshold: config.patternSuccessThreshold,
+        adaptiveLearning: config.adaptiveLearning,
+        enableBearMarketMode: config.enableBearMarketMode,
+        enableBullMarketMode: config.enableBullMarketMode,
+        volatilityAdjustment: config.volatilityAdjustment,
+        marketRegimeDetection: config.marketRegimeDetection,
+        enableDynamicScaling: config.enableDynamicScaling,
+        scalingAggression: config.scalingAggression,
+        enableEmergencyStop: config.enableEmergencyStop,
+        emergencyStopDrawdown: config.emergencyStopDrawdown,
+        botName: config.botName,
+        botPersonality: config.botPersonality,
+      });
+
+      res.json({ success: true, message: 'AI configuration updated successfully' });
+    } catch (error) {
+      console.error('Error updating AI config:', error);
+      res.status(500).json({ error: 'Failed to update AI configuration' });
+    }
+  });
+
   // Real-time alerts endpoint
   app.get('/api/alerts/settings', async (req, res) => {
     try {

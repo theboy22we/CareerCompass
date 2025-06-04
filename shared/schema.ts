@@ -35,6 +35,41 @@ export const botSettings = pgTable("bot_settings", {
   winningTrades: integer("winning_trades").default(0).notNull(),
   portfolioValue: decimal("portfolio_value", { precision: 18, scale: 2 }).default("1000.00").notNull(),
   lastUpdateTimestamp: timestamp("last_update_timestamp").defaultNow().notNull(),
+  
+  // AI Configuration Fields
+  signalConfidenceThreshold: integer("signal_confidence_threshold").default(70),
+  technicalWeight: integer("technical_weight").default(40),
+  aiWeight: integer("ai_weight").default(60),
+  sentimentWeight: integer("sentiment_weight").default(20),
+  volumeWeight: integer("volume_weight").default(15),
+  
+  // Risk Management
+  stopLossPercentage: decimal("stop_loss_percentage", { precision: 5, scale: 2 }).default("3.00"),
+  takeProfitPercentage: decimal("take_profit_percentage", { precision: 5, scale: 2 }).default("6.00"),
+  maxDailyLoss: decimal("max_daily_loss", { precision: 10, scale: 2 }).default("500.00"),
+  maxConsecutiveLosses: integer("max_consecutive_losses").default(3),
+  
+  // Pattern Recognition
+  enablePatternLearning: boolean("enable_pattern_learning").default(true),
+  minPatternOccurrences: integer("min_pattern_occurrences").default(5),
+  patternSuccessThreshold: integer("pattern_success_threshold").default(65),
+  adaptiveLearning: boolean("adaptive_learning").default(true),
+  
+  // Market Conditions
+  enableBearMarketMode: boolean("enable_bear_market_mode").default(true),
+  enableBullMarketMode: boolean("enable_bull_market_mode").default(true),
+  volatilityAdjustment: boolean("volatility_adjustment").default(true),
+  marketRegimeDetection: boolean("market_regime_detection").default(true),
+  
+  // Advanced Features
+  enableDynamicScaling: boolean("enable_dynamic_scaling").default(true),
+  scalingAggression: integer("scaling_aggression").default(50),
+  enableEmergencyStop: boolean("enable_emergency_stop").default(true),
+  emergencyStopDrawdown: integer("emergency_stop_drawdown").default(10),
+  
+  // Bot Identity
+  botName: text("bot_name").default("BitBot Pro"),
+  botPersonality: text("bot_personality").default("professional"),
 });
 
 export const priceData = pgTable("price_data", {
