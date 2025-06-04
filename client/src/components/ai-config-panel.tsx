@@ -119,7 +119,7 @@ export function AIConfigPanel({ className }: AIConfigPanelProps) {
       scalingAggression: 50,
       enableEmergencyStop: true,
       emergencyStopDrawdown: 10,
-      botName: 'BitBot Pro',
+      botName: 'KLOUD BOT PRO',
       botPersonality: 'professional',
     };
     setLocalConfig(defaults);
