@@ -651,128 +651,175 @@ export function AIConfigPanel({ className }: AIConfigPanelProps) {
               <div className="bg-gray-700 rounded-lg p-4">
                 <h4 className="text-sm font-medium text-gray-300 mb-3 flex items-center">
                   <i className="fas fa-info-circle text-cyan-400 mr-2" />
-                  Personality Effects
+                  How This Personality Trades
                 </h4>
-                <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="space-y-4">
                   {localConfig.botPersonality === 'professional' && (
-                    <>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-green-400 mr-2" />
-                        Lower risk tolerance
+                    <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4">
+                      <div className="flex items-center mb-3">
+                        <i className="fas fa-briefcase text-blue-400 mr-2" />
+                        <span className="font-medium text-blue-300">Professional Trader</span>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-green-400 mr-2" />
-                        Technical analysis focus
+                      <p className="text-sm text-gray-300 mb-3">Conservative, analytical approach focused on steady growth and capital preservation.</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-shield-alt text-blue-400 mr-2" />
+                          15-25% position sizes
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-chart-line text-blue-400 mr-2" />
+                          Technical analysis priority
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-target text-blue-400 mr-2" />
+                          3-5% profit targets
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-hand-paper text-blue-400 mr-2" />
+                          Conservative scaling
+                        </div>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-green-400 mr-2" />
-                        Steady profit targets
-                      </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-green-400 mr-2" />
-                        Conservative scaling
-                      </div>
-                    </>
+                    </div>
                   )}
+                  
                   {localConfig.botPersonality === 'aggressive' && (
-                    <>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-red-400 mr-2" />
-                        Higher risk tolerance
+                    <div className="bg-red-900/30 border border-red-500/30 rounded-lg p-4">
+                      <div className="flex items-center mb-3">
+                        <i className="fas fa-fire text-red-400 mr-2" />
+                        <span className="font-medium text-red-300">Aggressive Trader</span>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-red-400 mr-2" />
-                        Momentum-based trades
+                      <p className="text-sm text-gray-300 mb-3">High-risk, high-reward strategy targeting maximum profits with larger position sizes.</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-rocket text-red-400 mr-2" />
+                          40-60% position sizes
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-bolt text-red-400 mr-2" />
+                          Momentum-based signals
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-bullseye text-red-400 mr-2" />
+                          8-15% profit targets
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-arrow-up text-red-400 mr-2" />
+                          Aggressive scaling up
+                        </div>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-red-400 mr-2" />
-                        Larger position sizes
-                      </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-red-400 mr-2" />
-                        Aggressive scaling
-                      </div>
-                    </>
+                    </div>
                   )}
+                  
                   {localConfig.botPersonality === 'cautious' && (
-                    <>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-green-400 mr-2" />
-                        Minimal risk exposure
+                    <div className="bg-green-900/30 border border-green-500/30 rounded-lg p-4">
+                      <div className="flex items-center mb-3">
+                        <i className="fas fa-shield-alt text-green-400 mr-2" />
+                        <span className="font-medium text-green-300">Cautious Trader</span>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-green-400 mr-2" />
-                        Higher confidence threshold
+                      <p className="text-sm text-gray-300 mb-3">Risk-averse approach prioritizing capital protection over aggressive growth.</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-lock text-green-400 mr-2" />
+                          5-15% position sizes
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-search text-green-400 mr-2" />
+                          85%+ confidence required
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-coins text-green-400 mr-2" />
+                          2-4% profit targets
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-step-backward text-green-400 mr-2" />
+                          Minimal scaling
+                        </div>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-green-400 mr-2" />
-                        Smaller position sizes
-                      </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-green-400 mr-2" />
-                        Conservative exits
-                      </div>
-                    </>
+                    </div>
                   )}
+                  
                   {localConfig.botPersonality === 'balanced' && (
-                    <>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-purple-400 mr-2" />
-                        Moderate risk levels
+                    <div className="bg-purple-900/30 border border-purple-500/30 rounded-lg p-4">
+                      <div className="flex items-center mb-3">
+                        <i className="fas fa-balance-scale text-purple-400 mr-2" />
+                        <span className="font-medium text-purple-300">Balanced Trader</span>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-purple-400 mr-2" />
-                        Diversified approach
+                      <p className="text-sm text-gray-300 mb-3">Moderate risk approach adapting to market conditions with steady, consistent growth.</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-equals text-purple-400 mr-2" />
+                          20-35% position sizes
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-sync-alt text-purple-400 mr-2" />
+                          Adaptive signals
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-percentage text-purple-400 mr-2" />
+                          4-8% profit targets
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-chart-bar text-purple-400 mr-2" />
+                          Moderate scaling
+                        </div>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-purple-400 mr-2" />
-                        Adaptive strategy
-                      </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-purple-400 mr-2" />
-                        Balanced scaling
-                      </div>
-                    </>
+                    </div>
                   )}
+                  
                   {localConfig.botPersonality === 'scalper' && (
-                    <>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-yellow-400 mr-2" />
-                        High-frequency trading
+                    <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-lg p-4">
+                      <div className="flex items-center mb-3">
+                        <i className="fas fa-bolt text-yellow-400 mr-2" />
+                        <span className="font-medium text-yellow-300">Scalper</span>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-yellow-400 mr-2" />
-                        Quick profit taking
+                      <p className="text-sm text-gray-300 mb-3">High-frequency trading focused on quick entries and exits for small, frequent profits.</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-tachometer-alt text-yellow-400 mr-2" />
+                          30-50% position sizes
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-clock text-yellow-400 mr-2" />
+                          1-5 minute holds
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-cut text-yellow-400 mr-2" />
+                          1-3% profit targets
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-forward text-yellow-400 mr-2" />
+                          Fast scaling
+                        </div>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-yellow-400 mr-2" />
-                        Tight stop losses
-                      </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-yellow-400 mr-2" />
-                        Fast execution
-                      </div>
-                    </>
+                    </div>
                   )}
+                  
                   {localConfig.botPersonality === 'swing' && (
-                    <>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-cyan-400 mr-2" />
-                        Medium-term holds
+                    <div className="bg-cyan-900/30 border border-cyan-500/30 rounded-lg p-4">
+                      <div className="flex items-center mb-3">
+                        <i className="fas fa-chart-line text-cyan-400 mr-2" />
+                        <span className="font-medium text-cyan-300">Swing Trader</span>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-cyan-400 mr-2" />
-                        Trend following
+                      <p className="text-sm text-gray-300 mb-3">Medium-term position holding following trends for substantial moves over days/weeks.</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-hourglass-half text-cyan-400 mr-2" />
+                          25-40% position sizes
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-calendar text-cyan-400 mr-2" />
+                          Days/weeks holding
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-mountain text-cyan-400 mr-2" />
+                          10-25% profit targets
+                        </div>
+                        <div className="flex items-center text-gray-400">
+                          <i className="fas fa-expand-arrows-alt text-cyan-400 mr-2" />
+                          Wide stop losses
+                        </div>
                       </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-cyan-400 mr-2" />
-                        Wider stop losses
-                      </div>
-                      <div className="flex items-center text-gray-400">
-                        <i className="fas fa-check text-cyan-400 mr-2" />
-                        Patient entries
-                      </div>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>
