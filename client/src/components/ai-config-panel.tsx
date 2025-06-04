@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { apiRequest } from '@/lib/queryClient';
 
 interface AIConfigPanelProps {
@@ -147,6 +148,7 @@ export function AIConfigPanel({ className }: AIConfigPanelProps) {
     { id: 'patterns', label: 'Pattern Learning', icon: 'fa-brain' },
     { id: 'market', label: 'Market Conditions', icon: 'fa-globe' },
     { id: 'advanced', label: 'Advanced', icon: 'fa-cogs' },
+    { id: 'identity', label: 'Bot Identity', icon: 'fa-robot' },
   ];
 
   const getTabColor = (tabId: string) => {
@@ -156,6 +158,7 @@ export function AIConfigPanel({ className }: AIConfigPanelProps) {
       case 'patterns': return 'text-purple-400 border-purple-400';
       case 'market': return 'text-green-400 border-green-400';
       case 'advanced': return 'text-orange-400 border-orange-400';
+      case 'identity': return 'text-cyan-400 border-cyan-400';
       default: return 'text-gray-400 border-gray-400';
     }
   };
@@ -545,6 +548,235 @@ export function AIConfigPanel({ className }: AIConfigPanelProps) {
                 />
               </div>
             )}
+          </div>
+        )}
+
+        {/* Bot Identity Tab */}
+        {activeTab === 'identity' && (
+          <div className="space-y-6">
+            <div className="text-center mb-6">
+              <div className="w-20 h-20 mx-auto mb-4 bg-cyan-500/20 rounded-full flex items-center justify-center">
+                <i className="fas fa-robot text-cyan-400 text-3xl" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-200 mb-2">Customize Your AI Trading Assistant</h3>
+              <p className="text-sm text-gray-400">Give your bot a unique personality and name</p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-300 mb-3 block">Bot Name</Label>
+                <Input
+                  type="text"
+                  value={localConfig.botName}
+                  onChange={(e) => handleConfigChange('botName', e.target.value)}
+                  placeholder="Enter your bot's name"
+                  className="bg-gray-700 border-gray-600 text-white text-lg font-medium"
+                />
+                <p className="text-xs text-gray-500 mt-2">Choose a memorable name for your trading assistant</p>
+              </div>
+
+              <Separator className="bg-gray-600" />
+
+              <div>
+                <Label className="text-sm font-medium text-gray-300 mb-3 block">Personality Type</Label>
+                <Select 
+                  value={localConfig.botPersonality} 
+                  onValueChange={(value) => handleConfigChange('botPersonality', value)}
+                >
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectValue placeholder="Select personality" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    <SelectItem value="professional" className="text-white">
+                      <div className="flex items-center space-x-2">
+                        <i className="fas fa-briefcase text-blue-400" />
+                        <div>
+                          <div className="font-medium">Professional</div>
+                          <div className="text-xs text-gray-400">Conservative, analytical approach</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="aggressive" className="text-white">
+                      <div className="flex items-center space-x-2">
+                        <i className="fas fa-fire text-red-400" />
+                        <div>
+                          <div className="font-medium">Aggressive</div>
+                          <div className="text-xs text-gray-400">High-risk, high-reward strategy</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="cautious" className="text-white">
+                      <div className="flex items-center space-x-2">
+                        <i className="fas fa-shield-alt text-green-400" />
+                        <div>
+                          <div className="font-medium">Cautious</div>
+                          <div className="text-xs text-gray-400">Risk-averse, steady gains</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="balanced" className="text-white">
+                      <div className="flex items-center space-x-2">
+                        <i className="fas fa-balance-scale text-purple-400" />
+                        <div>
+                          <div className="font-medium">Balanced</div>
+                          <div className="text-xs text-gray-400">Moderate risk, steady growth</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="scalper" className="text-white">
+                      <div className="flex items-center space-x-2">
+                        <i className="fas fa-bolt text-yellow-400" />
+                        <div>
+                          <div className="font-medium">Scalper</div>
+                          <div className="text-xs text-gray-400">Fast trades, quick profits</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="swing" className="text-white">
+                      <div className="flex items-center space-x-2">
+                        <i className="fas fa-chart-line text-cyan-400" />
+                        <div>
+                          <div className="font-medium">Swing Trader</div>
+                          <div className="text-xs text-gray-400">Medium-term position holding</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-gray-500 mt-2">Personality affects trading style and risk tolerance</p>
+              </div>
+
+              <Separator className="bg-gray-600" />
+
+              <div className="bg-gray-700 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-gray-300 mb-3 flex items-center">
+                  <i className="fas fa-info-circle text-cyan-400 mr-2" />
+                  Personality Effects
+                </h4>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  {localConfig.botPersonality === 'professional' && (
+                    <>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-green-400 mr-2" />
+                        Lower risk tolerance
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-green-400 mr-2" />
+                        Technical analysis focus
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-green-400 mr-2" />
+                        Steady profit targets
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-green-400 mr-2" />
+                        Conservative scaling
+                      </div>
+                    </>
+                  )}
+                  {localConfig.botPersonality === 'aggressive' && (
+                    <>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-red-400 mr-2" />
+                        Higher risk tolerance
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-red-400 mr-2" />
+                        Momentum-based trades
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-red-400 mr-2" />
+                        Larger position sizes
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-red-400 mr-2" />
+                        Aggressive scaling
+                      </div>
+                    </>
+                  )}
+                  {localConfig.botPersonality === 'cautious' && (
+                    <>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-green-400 mr-2" />
+                        Minimal risk exposure
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-green-400 mr-2" />
+                        Higher confidence threshold
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-green-400 mr-2" />
+                        Smaller position sizes
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-green-400 mr-2" />
+                        Conservative exits
+                      </div>
+                    </>
+                  )}
+                  {localConfig.botPersonality === 'balanced' && (
+                    <>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-purple-400 mr-2" />
+                        Moderate risk levels
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-purple-400 mr-2" />
+                        Diversified approach
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-purple-400 mr-2" />
+                        Adaptive strategy
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-purple-400 mr-2" />
+                        Balanced scaling
+                      </div>
+                    </>
+                  )}
+                  {localConfig.botPersonality === 'scalper' && (
+                    <>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-yellow-400 mr-2" />
+                        High-frequency trading
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-yellow-400 mr-2" />
+                        Quick profit taking
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-yellow-400 mr-2" />
+                        Tight stop losses
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-yellow-400 mr-2" />
+                        Fast execution
+                      </div>
+                    </>
+                  )}
+                  {localConfig.botPersonality === 'swing' && (
+                    <>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-cyan-400 mr-2" />
+                        Medium-term holds
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-cyan-400 mr-2" />
+                        Trend following
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-cyan-400 mr-2" />
+                        Wider stop losses
+                      </div>
+                      <div className="flex items-center text-gray-400">
+                        <i className="fas fa-check text-cyan-400 mr-2" />
+                        Patient entries
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
