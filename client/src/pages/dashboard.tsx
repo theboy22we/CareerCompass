@@ -7,6 +7,8 @@ import { PerformanceMetrics } from '@/components/performance-metrics';
 import { NotificationSystem, useNotifications } from '@/components/notification-system';
 import { AIPredictionPanel } from '@/components/ai-prediction-panel';
 import { AutoTradingPanel } from '@/components/auto-trading-panel';
+import { MarketSentimentPanel } from '@/components/market-sentiment-panel';
+import { LiveTradingChart } from '@/components/live-trading-chart';
 import { useWebSocket } from '@/hooks/use-websocket';
 import { audioAlerts } from '@/lib/audio-alerts';
 import { Badge } from '@/components/ui/badge';
@@ -455,8 +457,25 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Chart and Analytics */}
-          <div className="flex-1 flex">
+          {/* Live Trading Charts Section */}
+          <div className="p-6 space-y-6">
+            {/* Main Live Trading Chart */}
+            <LiveTradingChart className="w-full" />
+            
+            {/* Analytics Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <MarketSentimentPanel className="w-full" />
+              <AIPredictionPanel className="w-full" />
+              <AutoTradingPanel 
+                isActive={botState?.isActive || false}
+                onToggle={handleToggleBot}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          {/* Legacy Chart and Analytics */}
+          <div className="flex-1 flex border-t border-border">
             {/* Chart Area */}
             <div className="flex-1 p-6">
               <TradingChart
