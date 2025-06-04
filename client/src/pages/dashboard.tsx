@@ -5,6 +5,8 @@ import { BotControls } from '@/components/bot-controls';
 import { TradeHistory } from '@/components/trade-history';
 import { PerformanceMetrics } from '@/components/performance-metrics';
 import { NotificationSystem, useNotifications } from '@/components/notification-system';
+import { AIPredictionPanel } from '@/components/ai-prediction-panel';
+import { AutoTradingPanel } from '@/components/auto-trading-panel';
 import { useWebSocket } from '@/hooks/use-websocket';
 import { audioAlerts } from '@/lib/audio-alerts';
 import { Badge } from '@/components/ui/badge';
@@ -189,6 +191,32 @@ export default function Dashboard() {
             title: `${message.data.signal.type} Signal`,
             message: `${message.data.signal.reason} (${message.data.signal.strength}% strength)`,
             data: message.data
+          });
+        }
+        break;
+
+      case 'ai:prediction':
+        // Handle AI prediction updates for real-time alerts
+        if (message.data.prediction && message.data.prediction.confidence >= 80) {
+          addNotification({
+            type: 'info',
+            title: 'AI Prediction Alert',
+            message: `${message.data.prediction.priceDirection} movement predicted with ${message.data.prediction.confidence}% confidence`,
+            data: message.data
+          });
+        }
+        
+        // Handle high-confidence AI signals
+        if (message.data.aiSignals && message.data.aiSignals.length > 0) {
+          message.data.aiSignals.forEach((signal: any) => {
+            if (signal.confidence >= 85) {
+              addNotification({
+                type: 'signal',
+                title: `AI ${signal.signal} Signal`,
+                message: signal.reasoning,
+                data: signal
+              });
+            }
           });
         }
         break;
@@ -439,7 +467,19 @@ export default function Dashboard() {
             </div>
 
             {/* Right Panel */}
-            <div className="w-80 p-6 space-y-6 border-l border-border overflow-y-auto custom-scrollbar">
+            <div className="w-96 p-6 space-y-6 border-l border-border overflow-y-auto custom-scrollbar">
+              {/* AI Prediction Panel */}
+              <AIPredictionPanel />
+
+              {/* Auto-Trading Controls */}
+              <AutoTradingPanel 
+                isActive={botState?.isActive || false}
+                onToggle={(enabled) => {
+                  refetchBotStatus();
+                  refetchPerformance();
+                }}
+              />
+
               {/* Performance Metrics */}
               {performance && botState && botStatus && (
                 <PerformanceMetrics
