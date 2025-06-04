@@ -84,6 +84,38 @@
   --ring: 51 100% 50%;
 }
 
+.light {
+  /* Light Theme Colors */
+  --background: 0 0% 98%; /* Almost white */
+  --foreground: 240 17% 15%; /* Dark purple/black */
+
+  --muted: 210 20% 95%; /* Light gray */
+  --muted-foreground: 240 17% 45%; /* Medium purple */
+
+  --popover: 0 0% 100%; /* Pure white */
+  --popover-foreground: 240 17% 15%; /* Dark purple/black */
+
+  --card: 0 0% 100%; /* Pure white */
+  --card-foreground: 240 17% 15%; /* Dark purple/black */
+
+  --border: 271 56% 75%; /* Light purple */
+  --input: 0 0% 100%; /* Pure white */
+
+  --primary: 271 56% 56%; /* Space purple */
+  --primary-foreground: 0 0% 98%; /* Almost white */
+
+  --secondary: 210 20% 95%; /* Light gray */
+  --secondary-foreground: 240 17% 15%; /* Dark purple/black */
+
+  --accent: 51 100% 45%; /* Darker gold for better contrast */
+  --accent-foreground: 0 0% 98%; /* Almost white */
+
+  --destructive: 330 81% 43%; /* Nebula pink */
+  --destructive-foreground: 0 0% 98%; /* Almost white */
+
+  --ring: 271 56% 56%; /* Space purple */
+}
+
 @layer base {
   * {
     @apply border-border;
