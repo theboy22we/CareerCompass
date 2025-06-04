@@ -230,9 +230,9 @@ export function BotControls({
         </CardContent>
       </Card>
 
-      {/* Current Position */}
+      {/* Current Position - Cosmic Style */}
       {currentPosition?.isOpen && (
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="cosmic-card">
           <CardHeader>
             <CardTitle>Current Position</CardTitle>
           </CardHeader>
