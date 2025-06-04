@@ -9,6 +9,8 @@ import { AIPredictionPanel } from '@/components/ai-prediction-panel';
 import { AutoTradingPanel } from '@/components/auto-trading-panel';
 import { MarketSentimentPanel } from '@/components/market-sentiment-panel';
 import { SimpleLiveChart } from '@/components/simple-live-chart';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { MarketSelector } from '@/components/market-selector';
 import { useWebSocket } from '@/hooks/use-websocket';
 import { audioAlerts } from '@/lib/audio-alerts';
 import { Badge } from '@/components/ui/badge';
