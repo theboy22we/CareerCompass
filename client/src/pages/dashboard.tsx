@@ -8,7 +8,7 @@ import { NotificationSystem, useNotifications } from '@/components/notification-
 import { AIPredictionPanel } from '@/components/ai-prediction-panel';
 import { AutoTradingPanel } from '@/components/auto-trading-panel';
 import { MarketSentimentPanel } from '@/components/market-sentiment-panel';
-import { LiveTradingChart } from '@/components/live-trading-chart';
+import { SimpleLiveChart } from '@/components/simple-live-chart';
 import { useWebSocket } from '@/hooks/use-websocket';
 import { audioAlerts } from '@/lib/audio-alerts';
 import { Badge } from '@/components/ui/badge';
@@ -337,6 +337,35 @@ export default function Dashboard() {
     return change >= 0 ? 'text-green-400' : 'text-red-400';
   };
 
+  const handleToggleBot = async (enabled: boolean) => {
+    try {
+      if (enabled) {
+        await fetch('/api/bot/start', { method: 'POST' });
+        addNotification({
+          type: 'success',
+          title: 'Trading bot started',
+          message: 'Auto-trading is now active'
+        });
+      } else {
+        await fetch('/api/bot/stop', { method: 'POST' });
+        addNotification({
+          type: 'info',
+          title: 'Trading bot stopped',
+          message: 'Auto-trading has been disabled'
+        });
+      }
+      refetchBotStatus();
+      refetchPerformance();
+    } catch (error) {
+      console.error('Error toggling bot:', error);
+      addNotification({
+        type: 'error',
+        title: 'Bot control failed',
+        message: 'Unable to change bot status'
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="flex h-screen">
@@ -460,7 +489,7 @@ export default function Dashboard() {
           {/* Live Trading Charts Section */}
           <div className="p-6 space-y-6">
             {/* Main Live Trading Chart */}
-            <LiveTradingChart className="w-full" />
+            <SimpleLiveChart className="w-full" />
             
             {/* Analytics Row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -468,7 +497,10 @@ export default function Dashboard() {
               <AIPredictionPanel className="w-full" />
               <AutoTradingPanel 
                 isActive={botState?.isActive || false}
-                onToggle={handleToggleBot}
+                onToggle={(enabled) => {
+                  refetchBotStatus();
+                  refetchPerformance();
+                }}
                 className="w-full"
               />
             </div>
