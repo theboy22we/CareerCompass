@@ -5,6 +5,7 @@ import { storage } from "./storage";
 import { tradingBot } from "./trading-bot";
 import { krakenAPI } from "./kraken-api";
 import { TechnicalAnalysis } from "./technical-indicators";
+import { mlPredictor } from "./ml-predictor";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -239,6 +240,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(updatedSettings);
     } catch (error) {
       res.status(500).json({ error: 'Failed to update bot settings' });
+    }
+  });
+
+  // Get AI price prediction
+  app.get('/api/ai/prediction', async (req, res) => {
+    try {
+      const ohlcData = await krakenAPI.getOHLCData();
+      const prices = ohlcData.map(d => d.close);
+      const volumes = ohlcData.map(d => d.volume);
+      
+      const prediction = await mlPredictor.predictPrice(prices, volumes, 15);
+      const aiSignals = await mlPredictor.getHighConfidenceSignals(prices, volumes);
+      const accuracyStats = mlPredictor.getAccuracyStats();
+      
+      res.json({
+        prediction,
+        aiSignals,
+        accuracy: accuracyStats,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to generate AI prediction' });
+    }
+  });
+
+  // Enable/disable auto-trading
+  app.post('/api/bot/auto-trade', async (req, res) => {
+    try {
+      const { enabled } = req.body;
+      
+      if (typeof enabled !== 'boolean') {
+        return res.status(400).json({ error: 'enabled must be a boolean' });
+      }
+
+      // Update bot settings to enable/disable auto-trading
+      await storage.updateBotSettings({
+        isActive: enabled
+      });
+
+      if (enabled) {
+        await tradingBot.start();
+      } else {
+        await tradingBot.stop();
+      }
+
+      res.json({ 
+        message: `Auto-trading ${enabled ? 'enabled' : 'disabled'}`,
+        autoTrading: enabled
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to toggle auto-trading' });
+    }
+  });
+
+  // Get learning progress and pattern analysis
+  app.get('/api/ai/learning', async (req, res) => {
+    try {
+      const accuracyStats = mlPredictor.getAccuracyStats();
+      res.json(accuracyStats);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get learning statistics' });
+    }
+  });
+
+  // Real-time alerts endpoint
+  app.get('/api/alerts/settings', async (req, res) => {
+    try {
+      // Return current alert settings
+      res.json({
+        priceAlerts: true,
+        signalAlerts: true,
+        tradeAlerts: true,
+        aiPredictionAlerts: true,
+        minConfidence: 75,
+        soundEnabled: true
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get alert settings' });
     }
   });
 

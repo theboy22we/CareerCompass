@@ -1,5 +1,6 @@
 import { krakenAPI, type KrakenTickerData, type KrakenOHLCData } from './kraken-api';
 import { TechnicalAnalysis, type TradingSignal } from './technical-indicators';
+import { mlPredictor, type PredictionData } from './ml-predictor';
 import { storage } from './storage';
 import type { BotSettings, Trade } from '@shared/schema';
 
@@ -204,20 +205,48 @@ export class TradingBot {
       // Don't trade if position is already open
       if (this.state.currentPosition?.isOpen) return;
 
-      const signal = TechnicalAnalysis.generateSignal(this.priceHistory, this.volumeHistory);
+      // Get traditional technical analysis signal
+      const technicalSignal = TechnicalAnalysis.generateSignal(this.priceHistory, this.volumeHistory);
       
-      // Require stronger signals for automated trading
-      if (signal.strength < 60) return;
+      // Get AI prediction for price movement
+      const aiPrediction = await mlPredictor.predictPrice(this.priceHistory, this.volumeHistory, 15);
+      
+      // Get high-confidence AI signals
+      const aiSignals = await mlPredictor.getHighConfidenceSignals(this.priceHistory, this.volumeHistory);
+      
+      // Combine traditional and AI signals for better accuracy
+      const combinedSignal = this.combineSignals(technicalSignal, aiPrediction, aiSignals);
+      
+      // Emit prediction and signal data for real-time alerts
+      this.emit('ai:prediction', {
+        prediction: aiPrediction,
+        aiSignals,
+        technicalSignal,
+        combinedSignal,
+        timestamp: Date.now()
+      });
+
+      // Require higher confidence for auto-trading
+      if (combinedSignal.strength < 70) {
+        // Still emit signal for user notifications even if not trading
+        this.emit('signal:generated', {
+          signal: combinedSignal,
+          prediction: aiPrediction,
+          timestamp: Date.now()
+        });
+        return;
+      }
 
       this.lastSignalTime = Date.now();
 
-      // Execute trade based on signal
-      if (signal.type === 'BUY' || signal.type === 'SELL') {
-        await this.executeTrade(signal, tickerData.price);
+      // Execute trade based on combined signal
+      if (combinedSignal.type === 'BUY' || combinedSignal.type === 'SELL') {
+        await this.executeTrade(combinedSignal, tickerData.price);
       }
 
       this.emit('signal:generated', {
-        signal,
+        signal: combinedSignal,
+        prediction: aiPrediction,
         timestamp: Date.now()
       });
 
@@ -225,6 +254,71 @@ export class TradingBot {
       console.error('Error in trade analysis:', error);
       this.emit('error', { message: 'Trade analysis failed', error });
     }
+  }
+
+  private combineSignals(
+    technicalSignal: TradingSignal,
+    aiPrediction: PredictionData,
+    aiSignals: Array<{ signal: 'BUY' | 'SELL'; confidence: number; reasoning: string }>
+  ): TradingSignal {
+    let combinedType: 'BUY' | 'SELL' | 'HOLD' = 'HOLD';
+    let combinedStrength = 0;
+    let combinedReason: string[] = [];
+
+    // Technical analysis weight: 40%
+    const technicalWeight = 0.4;
+    let technicalScore = technicalSignal.strength * technicalWeight;
+    
+    if (technicalSignal.type !== 'HOLD') {
+      combinedReason.push(`Technical: ${technicalSignal.reason} (${technicalSignal.strength}%)`);
+    }
+
+    // AI prediction weight: 60%
+    const aiWeight = 0.6;
+    let aiScore = 0;
+    
+    if (aiPrediction.confidence >= 70) {
+      aiScore = aiPrediction.confidence * aiWeight;
+      combinedReason.push(`AI: ${aiPrediction.priceDirection} prediction (${aiPrediction.confidence}% confidence)`);
+      
+      // If AI and technical agree, boost confidence
+      if ((aiPrediction.priceDirection === 'UP' && technicalSignal.type === 'BUY') ||
+          (aiPrediction.priceDirection === 'DOWN' && technicalSignal.type === 'SELL')) {
+        combinedStrength = Math.min(technicalScore + aiScore + 15, 100); // Bonus for agreement
+        combinedType = technicalSignal.type;
+        combinedReason.push('AI + Technical Agreement Boost');
+      } else if (aiScore > technicalScore) {
+        // AI signal is stronger
+        combinedStrength = aiScore;
+        combinedType = aiPrediction.priceDirection === 'UP' ? 'BUY' : 
+                      aiPrediction.priceDirection === 'DOWN' ? 'SELL' : 'HOLD';
+      } else {
+        // Technical signal is stronger
+        combinedStrength = technicalScore;
+        combinedType = technicalSignal.type;
+      }
+    } else {
+      // No strong AI signal, rely on technical
+      combinedStrength = technicalScore;
+      combinedType = technicalSignal.type;
+    }
+
+    // Add high-confidence AI signals
+    aiSignals.forEach(signal => {
+      if (signal.confidence >= 80) {
+        combinedReason.push(signal.reasoning);
+        if (signal.signal === combinedType) {
+          combinedStrength = Math.min(combinedStrength + 10, 100); // Boost if aligned
+        }
+      }
+    });
+
+    return {
+      type: combinedType,
+      strength: Math.round(combinedStrength),
+      reason: combinedReason.join(' | ') || 'Market analysis',
+      indicators: technicalSignal.indicators
+    };
   }
 
   private async executeTrade(signal: TradingSignal, currentPrice: number): Promise<void> {

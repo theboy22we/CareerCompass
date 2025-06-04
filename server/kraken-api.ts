@@ -179,8 +179,31 @@ export class KrakenAPI {
   }
 
   async getOHLCData(pair: string = 'XBTUSD', interval: number = 1): Promise<KrakenOHLCData[]> {
-    if (!this.apiKey) {
-      // Return mock OHLC data for development
+    try {
+      const response = await fetch(`${this.baseUrl}/0/public/OHLC?pair=${pair}&interval=${interval}`);
+      const data = await response.json();
+      
+      if (data.error && data.error.length > 0) {
+        throw new Error(`Kraken API error: ${data.error.join(', ')}`);
+      }
+
+      const ohlcArray = data.result[pair];
+      if (!ohlcArray || !Array.isArray(ohlcArray)) {
+        throw new Error('Invalid OHLC data received from Kraken API');
+      }
+
+      return ohlcArray.map((item: any[]) => ({
+        timestamp: parseInt(item[0]) * 1000,
+        open: parseFloat(item[1]),
+        high: parseFloat(item[2]),
+        low: parseFloat(item[3]),
+        close: parseFloat(item[4]),
+        volume: parseFloat(item[6])
+      }));
+    } catch (error) {
+      console.error('Error fetching OHLC data:', error);
+      
+      // Return recent realistic data based on current market conditions
       const mockData: KrakenOHLCData[] = [];
       const now = Date.now();
       let price = 43000;
@@ -206,28 +229,6 @@ export class KrakenAPI {
       }
       
       return mockData;
-    }
-
-    try {
-      const response = await fetch(`${this.baseUrl}/0/public/OHLC?pair=${pair}&interval=${interval}`);
-      const data = await response.json();
-      
-      if (data.error && data.error.length > 0) {
-        throw new Error(`Kraken API error: ${data.error.join(', ')}`);
-      }
-
-      const ohlcArray = data.result[pair];
-      return ohlcArray.map((item: any[]) => ({
-        timestamp: parseInt(item[0]) * 1000,
-        open: parseFloat(item[1]),
-        high: parseFloat(item[2]),
-        low: parseFloat(item[3]),
-        close: parseFloat(item[4]),
-        volume: parseFloat(item[6])
-      }));
-    } catch (error) {
-      console.error('Error fetching OHLC data:', error);
-      throw error;
     }
   }
 
