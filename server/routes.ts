@@ -6,6 +6,8 @@ import { tradingBot } from "./trading-bot";
 import { krakenAPI } from "./kraken-api";
 import { TechnicalAnalysis } from "./technical-indicators";
 import { mlPredictor } from "./ml-predictor";
+import { AdvancedAnalytics } from "./advanced-analytics";
+import { portfolioManager } from "./portfolio-manager";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -318,6 +320,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(500).json({ error: 'Failed to get alert settings' });
+    }
+  });
+
+  // Advanced market analytics
+  app.get('/api/analytics/market-sentiment', async (req, res) => {
+    try {
+      const ohlcData = await krakenAPI.getOHLCData();
+      const prices = ohlcData.map(d => d.close);
+      const volumes = ohlcData.map(d => d.volume);
+      const indicators = TechnicalAnalysis.calculateIndicators(prices);
+      
+      const sentiment = AdvancedAnalytics.calculateMarketSentiment(prices, volumes, indicators);
+      const volumeProfile = AdvancedAnalytics.analyzeVolumeProfile(volumes);
+      const marketRegime = AdvancedAnalytics.detectMarketRegime(prices);
+      
+      res.json({
+        sentiment,
+        volumeProfile,
+        marketRegime,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to calculate market sentiment' });
+    }
+  });
+
+  // Portfolio analytics
+  app.get('/api/analytics/portfolio', async (req, res) => {
+    try {
+      const portfolio = await portfolioManager.getPortfolioSummary();
+      const performance = await portfolioManager.analyzePerformance();
+      
+      res.json({
+        portfolio,
+        performance,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get portfolio analytics' });
+    }
+  });
+
+  // Risk metrics
+  app.get('/api/analytics/risk', async (req, res) => {
+    try {
+      const ohlcData = await krakenAPI.getOHLCData();
+      const prices = ohlcData.map(d => d.close);
+      const trades = await storage.getTrades();
+      
+      const riskMetrics = AdvancedAnalytics.calculateRiskMetrics(prices, trades);
+      
+      res.json({
+        riskMetrics,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to calculate risk metrics' });
+    }
+  });
+
+  // Support and resistance levels
+  app.get('/api/analytics/levels', async (req, res) => {
+    try {
+      const ohlcData = await krakenAPI.getOHLCData();
+      const prices = ohlcData.map(d => d.close);
+      
+      const levels = advancedAnalytics.findSupportResistance(prices);
+      const fibonacci = advancedAnalytics.calculateFibonacci(
+        Math.max(...prices.slice(-50)),
+        Math.min(...prices.slice(-50))
+      );
+      
+      res.json({
+        supportResistance: levels,
+        fibonacci,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to calculate support/resistance levels' });
     }
   });
 
