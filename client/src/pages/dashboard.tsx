@@ -375,29 +375,72 @@ export default function Dashboard() {
         <div className="w-80 bg-card border-r border-border flex flex-col">
           {/* Header - Cosmic Theme */}
           <div className="p-6 border-b border-border cosmic-card">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center relative overflow-hidden">
-                <i className="fa-brands fa-bitcoin text-white text-xl animate-spin" style={{animationDuration: '20s'}}></i>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 transform -skew-x-12 animate-pulse"></div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center relative overflow-hidden">
+                  <i className="fa-brands fa-bitcoin text-white text-xl animate-spin" style={{animationDuration: '20s'}}></i>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 transform -skew-x-12 animate-pulse"></div>
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-primary" style={{fontFamily: 'Orbitron', letterSpacing: '2px'}}>
+                    KLOUD BOT PRO
+                  </h1>
+                  <p className="text-xs text-muted-foreground" style={{fontFamily: 'Rajdhani', letterSpacing: '1px'}}>
+                    Cosmic Trading Intelligence
+                  </p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground" style={{fontFamily: 'Orbitron', letterSpacing: '2px', textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'}}>
-                  KLOUD BOT PRO
-                </h1>
-                <p className="text-sm text-muted-foreground" style={{fontFamily: 'Rajdhani', letterSpacing: '1px'}}>
-                  <i className="fas fa-satellite mr-1"></i>Cosmic Bitcoin Trading
-                </p>
+              
+              {/* Theme Toggle */}
+              <ThemeToggle />
+            </div>
+
+            {/* Wallet Stats */}
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="cosmic-card p-3 border border-border/50">
+                <div className="text-xs text-muted-foreground mb-1" style={{fontFamily: 'Rajdhani'}}>Portfolio Balance</div>
+                <div className="text-lg font-bold text-accent" style={{fontFamily: 'Orbitron'}}>
+                  ${(performance?.totalValue || 10000).toLocaleString()}
+                </div>
+              </div>
+              <div className="cosmic-card p-3 border border-border/50">
+                <div className="text-xs text-muted-foreground mb-1" style={{fontFamily: 'Rajdhani'}}>Today's PnL</div>
+                <div className={`text-lg font-bold ${(performance?.dailyPnl || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`} style={{fontFamily: 'Orbitron'}}>
+                  {(performance?.dailyPnl || 0) >= 0 ? '+' : ''}${(performance?.dailyPnl || 0).toFixed(2)}
+                </div>
+              </div>
+              <div className="cosmic-card p-3 border border-border/50">
+                <div className="text-xs text-muted-foreground mb-1" style={{fontFamily: 'Rajdhani'}}>Available</div>
+                <div className="text-sm font-bold text-primary" style={{fontFamily: 'Orbitron'}}>
+                  ${(performance?.availableBalance || 8500).toLocaleString()}
+                </div>
+              </div>
+              <div className="cosmic-card p-3 border border-border/50">
+                <div className="text-xs text-muted-foreground mb-1" style={{fontFamily: 'Rajdhani'}}>Total PnL</div>
+                <div className={`text-sm font-bold ${(performance?.totalPnl || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`} style={{fontFamily: 'Orbitron'}}>
+                  {(performance?.totalPnl || 0) >= 0 ? '+' : ''}${(performance?.totalPnl || 0).toFixed(2)}
+                </div>
               </div>
             </div>
-            
+
+            {/* Market Selector */}
+            <MarketSelector 
+              onSelectionChange={(exchange, symbol) => {
+                console.log(`Market changed: ${exchange} - ${symbol}`);
+                // Future: Update API calls based on selected market
+              }}
+              className="mb-4"
+            />
             {/* Connection Status */}
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Connection</span>
-              <div className="flex items-center space-x-2">
-                <div className={`w-2 h-2 rounded-full ${wsConnected ? 'status-online' : 'status-offline'}`} />
-                <span className={`text-sm font-medium ${wsConnected ? 'text-green-400' : 'text-red-400'}`}>
-                  {wsConnected ? 'Connected' : 'Disconnected'}
-                </span>
+            <div className="p-6 border-t border-border">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Connection</span>
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${wsConnected ? 'status-online' : 'status-offline'}`} />
+                  <span className={`text-sm font-medium ${wsConnected ? 'text-green-400' : 'text-red-400'}`}>
+                    {wsConnected ? 'Connected' : 'Disconnected'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
