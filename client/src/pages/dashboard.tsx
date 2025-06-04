@@ -371,15 +371,20 @@ export default function Dashboard() {
       <div className="flex h-screen">
         {/* Left Sidebar */}
         <div className="w-80 bg-card border-r border-border flex flex-col">
-          {/* Header */}
-          <div className="p-6 border-b border-border">
+          {/* Header - Cosmic Theme */}
+          <div className="p-6 border-b border-border cosmic-card">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-lg font-bold">₿</span>
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center relative overflow-hidden">
+                <i className="fa-brands fa-bitcoin text-white text-xl animate-spin" style={{animationDuration: '20s'}}></i>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 transform -skew-x-12 animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">BitBot Pro</h1>
-                <p className="text-sm text-muted-foreground">Automated Trading</p>
+                <h1 className="text-2xl font-bold text-foreground" style={{fontFamily: 'Orbitron', letterSpacing: '2px', textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'}}>
+                  KLOUD BOT PRO
+                </h1>
+                <p className="text-sm text-muted-foreground" style={{fontFamily: 'Rajdhani', letterSpacing: '1px'}}>
+                  <i className="fas fa-satellite mr-1"></i>Cosmic Bitcoin Trading
+                </p>
               </div>
             </div>
             
@@ -477,11 +482,11 @@ export default function Dashboard() {
                   onMarkRead={markAsRead}
                 />
 
-                {/* Emergency Stop */}
-                <Button variant="destructive" size="sm">
-                  <i className="fas fa-stop mr-2" />
-                  Emergency Stop
-                </Button>
+                {/* Emergency Stop - Cosmic Style */}
+                <button className="cosmic-action-btn bg-gradient-to-r from-pink-600 via-red-500 to-orange-500 border-red-500 hover:from-red-600 hover:via-pink-500 hover:to-orange-600">
+                  <i className="fas fa-exclamation-triangle mr-2" />
+                  <span>EMERGENCY STOP</span>
+                </button>
               </div>
             </div>
           </div>

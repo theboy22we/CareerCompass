@@ -164,70 +164,69 @@ export function BotControls({
 
   return (
     <div className="space-y-6">
-      {/* Bot Status */}
-      <Card className="bg-gray-800 border-gray-700">
+      {/* Bot Status - Cosmic Style */}
+      <Card className="cosmic-card">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <div className={`w-3 h-3 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`} />
-            <span>Bot Status</span>
+          <CardTitle className="flex items-center space-x-3" style={{fontFamily: 'Orbitron', letterSpacing: '1px'}}>
+            <div className={`w-4 h-4 rounded-full ${isActive ? 'status-online' : 'status-offline'}`} />
+            <span className="text-primary">KLOUD BOT STATUS</span>
+            <i className="fas fa-satellite text-accent ml-auto"></i>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex space-x-3">
+        <CardContent className="space-y-6">
+          <div className="flex space-x-4">
             {!isActive ? (
-              <Button 
+              <button 
                 onClick={handleStart}
                 disabled={isUpdating}
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                className="cosmic-main-btn flex-1 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"
               >
-                <i className="fas fa-play mr-2" />
-                Start Trading
-              </Button>
+                <span className="flex items-center justify-center">
+                  <i className="fas fa-rocket mr-3 text-xl" />
+                  ACTIVATE KLOUD BOT
+                </span>
+              </button>
             ) : (
-              <Button 
+              <button 
                 onClick={handleStop}
                 disabled={isUpdating}
-                variant="outline"
-                className="flex-1"
+                className="cosmic-main-btn flex-1 bg-gradient-to-r from-orange-500 via-yellow-500 to-amber-500"
               >
-                <i className="fas fa-pause mr-2" />
-                Stop Bot
-              </Button>
+                <span className="flex items-center justify-center">
+                  <i className="fas fa-pause mr-3 text-xl" />
+                  DEACTIVATE BOT
+                </span>
+              </button>
             )}
-            
-            <Button 
-              onClick={handleEmergencyStop}
-              disabled={isUpdating}
-              variant="destructive"
-              className="flex-1"
-            >
-              <i className="fas fa-stop mr-2" />
-              Emergency Stop
-            </Button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Button
+          <div className="grid grid-cols-2 gap-4">
+            <button
               onClick={() => handleForceSignal('BUY')}
               disabled={isUpdating || !isActive || currentPosition?.isOpen}
-              variant="outline"
-              size="sm"
-              className="border-green-600 text-green-400 hover:bg-green-600/20"
+              className="cosmic-action-btn bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <i className="fas fa-arrow-up mr-1" />
-              Force Buy
-            </Button>
-            <Button
+              <i className="fas fa-arrow-up mr-2" />
+              <span>FORCE BUY</span>
+            </button>
+            <button
               onClick={() => handleForceSignal('SELL')}
               disabled={isUpdating || !isActive || currentPosition?.isOpen}
-              variant="outline"
-              size="sm"
-              className="border-red-600 text-red-400 hover:bg-red-600/20"
+              className="cosmic-action-btn bg-gradient-to-r from-red-600 via-pink-600 to-rose-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <i className="fas fa-arrow-down mr-1" />
-              Force Sell
-            </Button>
+              <i className="fas fa-arrow-down mr-2" />
+              <span>FORCE SELL</span>
+            </button>
           </div>
+
+          <button 
+            onClick={handleEmergencyStop}
+            disabled={isUpdating}
+            className="cosmic-action-btn w-full bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 border-red-500"
+          >
+            <i className="fas fa-exclamation-triangle mr-3" />
+            <span>EMERGENCY SHUTDOWN</span>
+          </button>
         </CardContent>
       </Card>
 

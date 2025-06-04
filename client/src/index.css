@@ -2,141 +2,345 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Cosmic Color Palette */
 :root {
-  --background: 240 10% 3.9%; /* #0F172A - trading-dark */
-  --foreground: 0 0% 98%; /* #FAFAFA */
-  --muted: 240 3.7% 15.9%; /* #1E293B - trading-slate */
-  --muted-foreground: 240 5% 64.9%; /* #64748B */
-  --popover: 240 10% 3.9%; /* #0F172A */
-  --popover-foreground: 0 0% 98%; /* #FAFAFA */
-  --card: 240 3.7% 15.9%; /* #1E293B - trading-slate */
-  --card-foreground: 0 0% 98%; /* #FAFAFA */
-  --border: 240 3.7% 25.9%; /* #334155 - trading-slate-light */
-  --input: 240 3.7% 15.9%; /* #1E293B */
-  --primary: 142 71% 45%; /* #10B981 - trading-green */
-  --primary-foreground: 0 0% 98%; /* #FAFAFA */
-  --secondary: 240 3.7% 15.9%; /* #1E293B */
-  --secondary-foreground: 0 0% 98%; /* #FAFAFA */
-  --accent: 240 3.7% 15.9%; /* #1E293B */
-  --accent-foreground: 0 0% 98%; /* #FAFAFA */
-  --destructive: 0 84.2% 60.2%; /* #EF4444 - trading-red */
-  --destructive-foreground: 0 0% 98%; /* #FAFAFA */
-  --ring: 142 71% 45%; /* #10B981 */
-  --radius: 0.5rem;
-  --chart-1: 221 83% 53%; /* #3B82F6 - trading-blue */
-  --chart-2: 142 71% 45%; /* #10B981 - trading-green */
-  --chart-3: 0 84.2% 60.2%; /* #EF4444 - trading-red */
-  --chart-4: 45 93% 47%; /* #F59E0B - trading-yellow */
-  --chart-5: 271 81% 56%; /* #8B5CF6 */
-  --sidebar-background: 240 3.7% 15.9%; /* #1E293B */
-  --sidebar-foreground: 0 0% 98%; /* #FAFAFA */
-  --sidebar-primary: 142 71% 45%; /* #10B981 */
-  --sidebar-primary-foreground: 0 0% 98%; /* #FAFAFA */
-  --sidebar-accent: 240 3.7% 25.9%; /* #334155 */
-  --sidebar-accent-foreground: 0 0% 98%; /* #FAFAFA */
-  --sidebar-border: 240 3.7% 25.9%; /* #334155 */
-  --sidebar-ring: 142 71% 45%; /* #10B981 */
+  /* Cosmic Theme Colors */
+  --cosmic-black: #0a0a0a;
+  --space-purple: #8a2be2;
+  --cyber-gold: #ffd700;
+  --deep-space: #111122;
+  --nebula-pink: #c71585;
+  --stellar-blue: #4b0082;
+  --dark-matter: #1a1a2e;
+  --light-gold: #ffe066;
+  
+  /* Updated Tailwind Variables for Cosmic Theme */
+  --background: 240 10% 4%; /* cosmic-black */
+  --foreground: 51 100% 84%; /* cyber-gold light */
+
+  --muted: 240 17% 11%; /* dark-matter */
+  --muted-foreground: 271 56% 60%; /* space-purple light */
+
+  --popover: 240 17% 11%; /* dark-matter */
+  --popover-foreground: 51 100% 84%; /* cyber-gold light */
+
+  --card: 240 17% 11%; /* dark-matter */
+  --card-foreground: 51 100% 84%; /* cyber-gold light */
+
+  --border: 271 56% 56%; /* space-purple */
+  --input: 240 17% 11%; /* dark-matter */
+
+  --primary: 271 56% 56%; /* space-purple */
+  --primary-foreground: 51 100% 50%; /* cyber-gold */
+
+  --secondary: 258 100% 25%; /* stellar-blue */
+  --secondary-foreground: 51 100% 84%; /* cyber-gold light */
+
+  --accent: 51 100% 50%; /* cyber-gold */
+  --accent-foreground: 240 10% 4%; /* cosmic-black */
+
+  --destructive: 330 81% 43%; /* nebula-pink */
+  --destructive-foreground: 51 100% 84%; /* cyber-gold light */
+
+  --ring: 51 100% 50%; /* cyber-gold */
+
+  --chart-1: 51 100% 50%; /* cyber-gold */
+  --chart-2: 271 56% 56%; /* space-purple */
+  --chart-3: 330 81% 43%; /* nebula-pink */
+  --chart-4: 258 100% 25%; /* stellar-blue */
+  --chart-5: 51 100% 70%; /* light-gold */
+
+  --radius: 0.75rem;
+  
+  --sidebar-background: 240 17% 11%;
+  --sidebar-foreground: 51 100% 84%;
+  --sidebar-primary: 271 56% 56%;
+  --sidebar-primary-foreground: 51 100% 50%;
+  --sidebar-accent: 240 17% 15%;
+  --sidebar-accent-foreground: 51 100% 84%;
+  --sidebar-border: 271 56% 56%;
+  --sidebar-ring: 51 100% 50%;
 }
 
 .dark {
-  --background: 240 10% 3.9%; /* #0F172A */
-  --foreground: 0 0% 98%; /* #FAFAFA */
-  --muted: 240 3.7% 15.9%; /* #1E293B */
-  --muted-foreground: 240 5% 64.9%; /* #64748B */
-  --popover: 240 10% 3.9%; /* #0F172A */
-  --popover-foreground: 0 0% 98%; /* #FAFAFA */
-  --card: 240 3.7% 15.9%; /* #1E293B */
-  --card-foreground: 0 0% 98%; /* #FAFAFA */
-  --border: 240 3.7% 25.9%; /* #334155 */
-  --input: 240 3.7% 15.9%; /* #1E293B */
-  --primary: 142 71% 45%; /* #10B981 */
-  --primary-foreground: 0 0% 98%; /* #FAFAFA */
-  --secondary: 240 3.7% 15.9%; /* #1E293B */
-  --secondary-foreground: 0 0% 98%; /* #FAFAFA */
-  --accent: 240 3.7% 15.9%; /* #1E293B */
-  --accent-foreground: 0 0% 98%; /* #FAFAFA */
-  --destructive: 0 84.2% 60.2%; /* #EF4444 */
-  --destructive-foreground: 0 0% 98%; /* #FAFAFA */
-  --ring: 142 71% 45%; /* #10B981 */
+  --background: 240 10% 4%;
+  --foreground: 51 100% 84%;
+  --muted: 240 17% 11%;
+  --muted-foreground: 271 56% 60%;
+  --popover: 240 17% 11%;
+  --popover-foreground: 51 100% 84%;
+  --card: 240 17% 11%;
+  --card-foreground: 51 100% 84%;
+  --border: 271 56% 56%;
+  --input: 240 17% 11%;
+  --primary: 271 56% 56%;
+  --primary-foreground: 51 100% 50%;
+  --secondary: 258 100% 25%;
+  --secondary-foreground: 51 100% 84%;
+  --accent: 51 100% 50%;
+  --accent-foreground: 240 10% 4%;
+  --destructive: 330 81% 43%;
+  --destructive-foreground: 51 100% 84%;
+  --ring: 51 100% 50%;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
-
+  
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply bg-background text-foreground;
+    font-family: 'Rajdhani', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    background-color: var(--cosmic-black);
+    
+    /* Starry Space Background */
+    background-image: 
+      radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+      radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+      radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px),
+      radial-gradient(2px 2px at 20px 30px, var(--cyber-gold), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 40px 70px, var(--light-gold), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 90px 40px, var(--space-purple), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 130px 80px, var(--light-gold), rgba(0,0,0,0));
+    background-size: 
+      550px 550px, 
+      350px 350px, 
+      250px 250px,
+      200px 200px,
+      200px 200px,
+      200px 200px,
+      200px 200px;
+    background-position: 
+      0 0, 
+      40px 60px, 
+      130px 270px,
+      0 0,
+      50px 100px,
+      150px 200px,
+      300px 50px;
+    animation: twinkle 8s ease-in-out infinite;
   }
-
+  
+  /* Cosmic Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--cyber-gold);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+  
   html {
     scroll-behavior: smooth;
   }
 }
 
 @layer components {
+  /* Cosmic Card Styling */
+  .cosmic-card {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(10, 10, 10, 0.95));
+    border: 1px solid var(--space-purple);
+    border-radius: 12px;
+    box-shadow: 
+      0 0 30px rgba(138, 43, 226, 0.2),
+      inset 0 0 20px rgba(255, 215, 0, 0.05);
+    backdrop-filter: blur(10px);
+  }
+  
+  /* Ultra-Flashy Main Buttons */
+  .cosmic-main-btn {
+    position: relative;
+    overflow: hidden;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: 2px solid var(--cyber-gold);
+    background: linear-gradient(
+      45deg,
+      rgba(138, 43, 226, 0.7),
+      rgba(75, 0, 130, 0.8),
+      rgba(25, 25, 112, 0.9)
+    );
+    background-size: 300% 100%;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cyber-gold);
+    animation: ultra-glow 3s infinite, nebula-shift 6s infinite;
+    transition: all 0.4s ease;
+    transform-style: preserve-3d;
+    box-shadow: 
+      0 10px 15px rgba(0, 0, 0, 0.4),
+      0 0 30px 5px rgba(138, 43, 226, 0.3);
+  }
+
+  .cosmic-main-btn:hover {
+    transform: translateY(-5px) scale(1.03);
+    animation: ultra-glow 1.5s infinite, nebula-shift 3s infinite;
+    color: white;
+    text-shadow: 
+      0 0 10px var(--cyber-gold),
+      0 0 20px var(--cyber-gold);
+  }
+
+  .cosmic-main-btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg, 
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    animation: cosmic-rays 2s infinite;
+    z-index: 1;
+  }
+
+  .cosmic-main-btn:hover:before {
+    animation: cosmic-rays 1s infinite;
+  }
+
+  .cosmic-main-btn span {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Cosmic Action Buttons */
+  .cosmic-action-btn {
+    position: relative;
+    overflow: hidden;
+    padding: 16px;
+    border-radius: 8px;
+    border: 2px solid;
+    border-image: linear-gradient(45deg, var(--cyber-gold), var(--space-purple), #ff00cc, var(--cyber-gold)) 1;
+    background: linear-gradient(
+      45deg,
+      rgba(25, 25, 112, 0.9),
+      rgba(75, 0, 130, 0.8),
+      rgba(138, 43, 226, 0.7)
+    );
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cyber-gold);
+    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    box-shadow: 
+      0 8px 15px rgba(0, 0, 0, 0.3),
+      0 0 20px 5px rgba(138, 43, 226, 0.2),
+      inset 0 0 15px rgba(255, 215, 0, 0.2);
+  }
+
+  .cosmic-action-btn:hover {
+    transform: translateY(-5px);
+    color: white;
+    background: linear-gradient(
+      45deg,
+      rgba(138, 43, 226, 0.8),
+      rgba(75, 0, 130, 0.9),
+      rgba(25, 25, 112, 1)
+    );
+    box-shadow: 
+      0 15px 25px rgba(0, 0, 0, 0.4),
+      0 0 30px 10px rgba(138, 43, 226, 0.4),
+      inset 0 0 20px rgba(255, 215, 0, 0.4);
+    text-shadow: 
+      0 0 10px white,
+      0 0 20px var(--cyber-gold);
+  }
+
+  .cosmic-action-btn:before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      transparent,
+      rgba(255, 215, 0, 0.2),
+      transparent,
+      transparent
+    );
+    animation: rotate 4s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cosmic-action-btn:hover:before {
+    opacity: 1;
+  }
+
   /* Trading specific styles */
   .trading-gradient-green {
-    background: linear-gradient(135deg, hsl(142 71% 45%) 0%, hsl(142 71% 35%) 100%);
+    background: linear-gradient(135deg, var(--cyber-gold) 0%, var(--light-gold) 100%);
   }
   
   .trading-gradient-red {
-    background: linear-gradient(135deg, hsl(0 84% 60%) 0%, hsl(0 84% 50%) 100%);
+    background: linear-gradient(135deg, var(--nebula-pink) 0%, #ff1493 100%);
   }
   
   .trading-gradient-blue {
-    background: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(221 83% 43%) 100%);
+    background: linear-gradient(135deg, var(--space-purple) 0%, var(--stellar-blue) 100%);
   }
 
   /* Glow effects */
   .glow-green {
-    box-shadow: 0 0 20px hsla(142 71% 45% / 0.3);
+    box-shadow: 0 0 20px var(--cyber-gold);
   }
   
   .glow-red {
-    box-shadow: 0 0 20px hsla(0 84% 60% / 0.3);
+    box-shadow: 0 0 20px var(--nebula-pink);
   }
   
   .glow-blue {
-    box-shadow: 0 0 20px hsla(221 83% 53% / 0.3);
+    box-shadow: 0 0 20px var(--space-purple);
   }
 
   /* Pulse animations */
   .pulse-green {
-    animation: pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
   
   .pulse-red {
-    animation: pulse-red 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: pulse-pink 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
   /* Custom scrollbar */
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: hsl(var(--muted));
-    border-radius: 3px;
+    background: var(--dark-matter);
+    border-radius: 4px;
   }
   
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border-radius: 3px;
+    background: linear-gradient(45deg, var(--space-purple), var(--cyber-gold));
+    border-radius: 4px;
   }
   
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
+    background: linear-gradient(45deg, var(--cyber-gold), var(--space-purple));
   }
 
   /* Chart tooltip styles */
   .chart-tooltip {
-    background: hsl(var(--popover)) !important;
-    border: 1px solid hsl(var(--border)) !important;
-    border-radius: 6px !important;
-    color: hsl(var(--popover-foreground)) !important;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
+    background: linear-gradient(135deg, var(--dark-matter), var(--cosmic-black)) !important;
+    border: 1px solid var(--space-purple) !important;
+    border-radius: 8px !important;
+    color: var(--cyber-gold) !important;
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3) !important;
   }
 
   /* Notification animations */
@@ -159,51 +363,116 @@
 
   /* Status indicator animations */
   .status-online {
-    background-color: hsl(var(--primary));
-    animation: pulse-green 2s infinite;
+    background-color: var(--cyber-gold);
+    animation: pulse-gold 2s infinite;
+    box-shadow: 0 0 10px var(--cyber-gold);
   }
   
   .status-offline {
-    background-color: hsl(var(--destructive));
+    background-color: var(--nebula-pink);
+    box-shadow: 0 0 10px var(--nebula-pink);
   }
   
   .status-warning {
-    background-color: hsl(45 93% 47%);
+    background-color: var(--light-gold);
     animation: pulse-yellow 2s infinite;
+    box-shadow: 0 0 10px var(--light-gold);
   }
 }
 
-@keyframes pulse-green {
-  0%, 100% {
-    opacity: 1;
-    background-color: hsl(142 71% 45%);
+/* Cosmic Animations */
+@keyframes twinkle {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.3; }
+}
+
+@keyframes ultra-glow {
+  0% {
+    box-shadow: 
+      0 0 30px 5px rgba(255, 215, 0, 0.7), 
+      0 0 40px 10px rgba(138, 43, 226, 0.4),
+      inset 0 0 15px 2px rgba(255, 215, 0, 0.5);
   }
   50% {
-    opacity: 0.7;
-    background-color: hsl(142 71% 35%);
+    box-shadow: 
+      0 0 50px 10px rgba(255, 215, 0, 0.9), 
+      0 0 60px 15px rgba(138, 43, 226, 0.6),
+      inset 0 0 20px 5px rgba(255, 215, 0, 0.7);
+  }
+  100% {
+    box-shadow: 
+      0 0 30px 5px rgba(255, 215, 0, 0.7), 
+      0 0 40px 10px rgba(138, 43, 226, 0.4),
+      inset 0 0 15px 2px rgba(255, 215, 0, 0.5);
   }
 }
 
-@keyframes pulse-red {
+@keyframes nebula-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes cosmic-rays {
+  0% {
+    opacity: 0.2;
+    transform: scaleX(0) translateX(-100%);
+  }
+  20% {
+    opacity: 0.8;
+    transform: scaleX(1) translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1) translateX(100%);
+  }
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-gold {
   0%, 100% {
     opacity: 1;
-    background-color: hsl(0 84% 60%);
+    background-color: var(--cyber-gold);
   }
   50% {
     opacity: 0.7;
-    background-color: hsl(0 84% 50%);
+    background-color: var(--light-gold);
+  }
+}
+
+@keyframes pulse-pink {
+  0%, 100% {
+    opacity: 1;
+    background-color: var(--nebula-pink);
+  }
+  50% {
+    opacity: 0.7;
+    background-color: #ff1493;
   }
 }
 
 @keyframes pulse-yellow {
   0%, 100% {
     opacity: 1;
-    background-color: hsl(45 93% 47%);
+    background-color: var(--light-gold);
   }
   50% {
     opacity: 0.7;
-    background-color: hsl(45 93% 37%);
+    background-color: var(--cyber-gold);
   }
+}
+
+/* Rotating Bitcoin Icon */
+.fa-bitcoin {
+  color: var(--cyber-gold);
+  animation: rotate 20s linear infinite;
+  display: inline-block;
+  text-shadow: 0 0 10px var(--cyber-gold);
 }
 
 /* Focus and accessibility improvements */
@@ -213,8 +482,9 @@
   input:focus-visible,
   select:focus-visible,
   textarea:focus-visible {
-    outline: 2px solid hsl(var(--ring));
+    outline: 2px solid var(--cyber-gold);
     outline-offset: 2px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
   }
 }
 
@@ -229,8 +499,8 @@
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   :root {
-    --border: 0 0% 100%;
-    --ring: 0 0% 100%;
+    --border: 51 100% 50%;
+    --ring: 51 100% 50%;
   }
 }
 
@@ -242,10 +512,18 @@
     transition-duration: 0.01ms !important;
   }
   
-  .pulse-green,
-  .pulse-red,
+  .pulse-gold,
+  .pulse-pink,
   .status-online,
-  .status-warning {
+  .status-warning,
+  .cosmic-main-btn,
+  .cosmic-action-btn,
+  .fa-bitcoin {
     animation: none !important;
+  }
+  
+  body {
+    background-image: none !important;
+    background-color: var(--cosmic-black) !important;
   }
 }
