@@ -12,8 +12,13 @@ import { portfolioManager } from "./portfolio-manager";
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
 
-  // Initialize WebSocket server
-  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  // Initialize WebSocket server with stability improvements
+  const wss = new WebSocketServer({ 
+    server: httpServer, 
+    path: '/ws',
+    perMessageDeflate: false,
+    clientTracking: true
+  });
 
   // Store connected clients
   const clients = new Set<WebSocket>();
@@ -29,14 +34,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       timestamp: Date.now()
     }));
 
+    // Set up heartbeat to keep connection alive
+    const heartbeat = setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.ping();
+      } else {
+        clearInterval(heartbeat);
+      }
+    }, 30000);
+
+    ws.on('pong', () => {
+      // Connection is alive
+    });
+
     ws.on('close', () => {
       console.log('Client disconnected from WebSocket');
       clients.delete(ws);
+      clearInterval(heartbeat);
     });
 
     ws.on('error', (error) => {
       console.error('WebSocket error:', error);
       clients.delete(ws);
+      clearInterval(heartbeat);
     });
   });
 
@@ -176,31 +196,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get current Bitcoin price and market data
-  app.get('/api/market/ticker', async (req, res) => {
+  // Get current price and market data for any trading pair
+  app.get('/api/market/ticker/:pair?', async (req, res) => {
     try {
-      const ticker = await krakenAPI.getTicker();
+      const pair = req.params.pair || 'XBTUSD';
+      const ticker = await krakenAPI.getTicker(pair);
       res.json(ticker);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch market data' });
     }
   });
 
-  // Get OHLC price data
-  app.get('/api/market/ohlc', async (req, res) => {
+  // Get OHLC price data for any trading pair
+  app.get('/api/market/ohlc/:pair?', async (req, res) => {
     try {
+      const pair = req.params.pair || 'XBTUSD';
       const interval = parseInt(req.query.interval as string) || 1;
-      const ohlcData = await krakenAPI.getOHLCData('XBTUSD', interval);
+      const ohlcData = await krakenAPI.getOHLCData(pair, interval);
       res.json(ohlcData);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch OHLC data' });
     }
   });
 
-  // Get technical indicators
-  app.get('/api/market/indicators', async (req, res) => {
+  // Get supported trading pairs
+  app.get('/api/market/pairs', async (req, res) => {
     try {
-      const ohlcData = await krakenAPI.getOHLCData();
+      const supportedPairs = [
+        { 
+          symbol: 'BTC', 
+          name: 'Bitcoin', 
+          krakenPair: 'XBTUSD',
+          price: 43000,
+          change24h: 2.5,
+          status: 'active'
+        },
+        { 
+          symbol: 'ETH', 
+          name: 'Ethereum', 
+          krakenPair: 'ETHUSD',
+          price: 2500,
+          change24h: 1.8,
+          status: 'active'
+        },
+        { 
+          symbol: 'ADA', 
+          name: 'Cardano', 
+          krakenPair: 'ADAUSD',
+          price: 0.45,
+          change24h: -0.5,
+          status: 'active'
+        },
+        { 
+          symbol: 'SOL', 
+          name: 'Solana', 
+          krakenPair: 'SOLUSD',
+          price: 95,
+          change24h: 3.2,
+          status: 'active'
+        },
+        { 
+          symbol: 'DOT', 
+          name: 'Polkadot', 
+          krakenPair: 'DOTUSD',
+          price: 6.5,
+          change24h: 1.1,
+          status: 'active'
+        },
+        { 
+          symbol: 'LINK', 
+          name: 'Chainlink', 
+          krakenPair: 'LINKUSD',
+          price: 14.5,
+          change24h: 0.8,
+          status: 'active'
+        }
+      ];
+      res.json(supportedPairs);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch supported pairs' });
+    }
+  });
+
+  // Get technical indicators for any trading pair
+  app.get('/api/market/indicators/:pair?', async (req, res) => {
+    try {
+      const pair = req.params.pair || 'XBTUSD';
+      const ohlcData = await krakenAPI.getOHLCData(pair);
       const prices = ohlcData.map(d => d.close);
       const volumes = ohlcData.map(d => d.volume);
       
@@ -210,6 +292,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         indicators,
         signal,
+        pair,
         timestamp: Date.now()
       });
     } catch (error) {

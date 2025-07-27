@@ -53,17 +53,20 @@ export class KrakenAPI {
       this.ws.on('open', () => {
         console.log('Connected to Kraken WebSocket');
         
-        // Subscribe to BTC/USD ticker
+        // Subscribe to multiple trading pairs
+        const tradingPairs = ['XBT/USD', 'ETH/USD', 'ADA/USD', 'SOL/USD', 'DOT/USD', 'LINK/USD'];
+        
+        // Subscribe to tickers for all pairs
         this.ws?.send(JSON.stringify({
           event: 'subscribe',
-          pair: ['XBT/USD'],
+          pair: tradingPairs,
           subscription: { name: 'ticker' }
         }));
 
-        // Subscribe to OHLC data
+        // Subscribe to OHLC data for all pairs
         this.ws?.send(JSON.stringify({
           event: 'subscribe',
-          pair: ['XBT/USD'],
+          pair: tradingPairs,
           subscription: { name: 'ohlc', interval: 1 }
         }));
 

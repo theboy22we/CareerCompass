@@ -89,6 +89,7 @@ export default function Dashboard() {
   const [tradeMarkers, setTradeMarkers] = useState<TradeMarker[]>([]);
   const [botState, setBotState] = useState<BotState | null>(null);
   const [wsConnected, setWsConnected] = useState(false);
+  const [selectedPair, setSelectedPair] = useState('XBTUSD');
   
   const { 
     notifications, 
@@ -113,13 +114,13 @@ export default function Dashboard() {
     refetchInterval: 10000,
   });
 
-  const { data: ohlcData = [] } = useQuery({
-    queryKey: ['/api/market/ohlc'],
+  const { data: ohlcData = [], refetch: refetchOhlcData } = useQuery({
+    queryKey: ['/api/market/ohlc', selectedPair],
     refetchInterval: 60000, // Refresh every minute
   });
 
-  const { data: indicators } = useQuery({
-    queryKey: ['/api/market/indicators'],
+  const { data: indicators, refetch: refetchIndicators } = useQuery({
+    queryKey: ['/api/market/indicators', selectedPair],
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
@@ -427,7 +428,12 @@ export default function Dashboard() {
             <MarketSelector 
               onSelectionChange={(exchange, symbol) => {
                 console.log(`Market changed: ${exchange} - ${symbol}`);
-                // Future: Update API calls based on selected market
+                setSelectedPair(symbol);
+                // Trigger refresh with new pair
+                setTimeout(() => {
+                  refetchOhlcData();
+                  refetchIndicators();
+                }, 100);
               }}
               className="mb-4"
             />

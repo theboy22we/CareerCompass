@@ -56,7 +56,7 @@ const CRYPTOCURRENCIES = [
     icon: 'Ξ',
     pairs: ['ETHUSD', 'ETHEUR', 'ETHUSDT', 'ETHBTC'],
     color: '#627EEA',
-    status: 'coming-soon'
+    status: 'active'
   },
   {
     symbol: 'ADA',
@@ -64,7 +64,7 @@ const CRYPTOCURRENCIES = [
     icon: '◈',
     pairs: ['ADAUSD', 'ADAEUR', 'ADAUSDT', 'ADABTC'],
     color: '#0033AD',
-    status: 'coming-soon'
+    status: 'active'
   },
   {
     symbol: 'SOL',
@@ -72,7 +72,7 @@ const CRYPTOCURRENCIES = [
     icon: '◉',
     pairs: ['SOLUSD', 'SOLEUR', 'SOLUSDT', 'SOLBTC'],
     color: '#9945FF',
-    status: 'coming-soon'
+    status: 'active'
   },
   {
     symbol: 'DOT',
@@ -88,7 +88,7 @@ const CRYPTOCURRENCIES = [
     icon: '🔗',
     pairs: ['LINKUSD', 'LINKEUR', 'LINKUSDT', 'LINKBTC'],
     color: '#375BD2',
-    status: 'coming-soon'
+    status: 'active'
   }
 ];
 

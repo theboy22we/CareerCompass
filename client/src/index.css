@@ -559,3 +559,26 @@
     background-color: var(--cosmic-black) !important;
   }
 }
+/* Prevent page transitions and fading issues */
+* {
+  transition-duration: 150ms !important;
+}
+
+/* Stabilize WebSocket connection indicators */
+.status-online {
+  animation: pulse-green 2s infinite;
+}
+
+.status-offline {
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px #22c55e; }
+  50% { opacity: 0.7; box-shadow: 0 0 12px #22c55e; }
+}
+
+@keyframes pulse-red {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px #ef4444; }
+  50% { opacity: 0.7; box-shadow: 0 0 12px #ef4444; }
+}
