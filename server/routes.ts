@@ -749,6 +749,311 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // AI Management endpoints
+  app.get('/api/ai/ghost', async (req, res) => {
+    try {
+      const ghostAI = {
+        id: 'ghost-ai-001',
+        name: 'Ghost AI Master Controller',
+        status: 'online',
+        permissions: ['APPROVE_WITHDRAWALS', 'MODIFY_MINING_RIGS', 'EMERGENCY_STOP'],
+        decisions: {
+          total: 1247,
+          approved: 1186,
+          rejected: 61,
+          pending: 3
+        },
+        config: {
+          approvalThreshold: 85,
+          autoApprove: false,
+          securityLevel: 'high',
+          monitoringEnabled: true
+        },
+        lastActive: new Date().toISOString()
+      };
+      res.json(ghostAI);
+    } catch (error) {
+      console.error('Error fetching Ghost AI data:', error);
+      res.status(500).json({ error: 'Failed to fetch Ghost AI data' });
+    }
+  });
+
+  app.get('/api/ai/ghost/approvals', async (req, res) => {
+    try {
+      const approvals = [
+        {
+          id: 'approval-1',
+          type: 'withdrawal',
+          description: 'BTC withdrawal of 0.5 BTC to external wallet',
+          priority: 'medium',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'approval-2', 
+          type: 'mining',
+          description: 'Auto-switch to higher profitability pool',
+          priority: 'low',
+          createdAt: new Date().toISOString()
+        }
+      ];
+      res.json(approvals);
+    } catch (error) {
+      console.error('Error fetching pending approvals:', error);
+      res.status(500).json({ error: 'Failed to fetch pending approvals' });
+    }
+  });
+
+  app.post('/api/ai/ghost/update', async (req, res) => {
+    try {
+      res.json({ success: true, message: 'Ghost AI updated successfully' });
+    } catch (error) {
+      console.error('Error updating Ghost AI:', error);
+      res.status(500).json({ error: 'Failed to update Ghost AI' });
+    }
+  });
+
+  app.post('/api/ai/ghost/approve', async (req, res) => {
+    try {
+      const { id, action, reason } = req.body;
+      res.json({ success: true, message: `Request ${action}ed successfully` });
+    } catch (error) {
+      console.error('Error processing approval:', error);
+      res.status(500).json({ error: 'Failed to process approval' });
+    }
+  });
+
+  // Mining Rigs endpoints
+  app.get('/api/mining/rigs', async (req, res) => {
+    try {
+      const rigNames = [
+        'TERACORE7', 'TERAALPHA7', 'TERAOMEGA7', 'TERANODE7', 'TERAOPTIMUS7',
+        'TERAJUSTICE7', 'TERAANNHARRIS7', 'TERA-ZIG-MINER7', 'TERAELITE7', 'TERAPOWER7',
+        'TERASUPREME7', 'TERAMAX7', 'TERAULTIMATE7', 'TERAPRIME7', 'TERABOOST7',
+        'TERAFORCE7', 'TERAENERGY7', 'TERASPEED7', 'TERASTRONG7', 'TERABEAST7',
+        'TERATITAN7', 'TERAGIANT7', 'TERALIGHTNING7', 'TERATHUNDER7', 'TERASTORM7'
+      ];
+
+      const rigs = rigNames.map((name, index) => ({
+        id: `rig-${index + 1}`,
+        name,
+        type: 'bitcoin',
+        hashrate: parseFloat((100 + Math.random() * 50).toFixed(2)),
+        powerDraw: Math.floor(3000 + Math.random() * 1000),
+        temperature: Math.floor(60 + Math.random() * 15),
+        status: ['online', 'offline', 'maintenance'][Math.floor(Math.random() * 3)],
+        efficiency: parseFloat((85 + Math.random() * 15).toFixed(2)),
+        dailyRevenue: parseFloat((40 + Math.random() * 30).toFixed(2)),
+        location: `KLOUDBUGS Data Center ${String.fromCharCode(65 + Math.floor(index / 5))}`,
+        poolId: 'pool-1',
+        hardware: ['ASIC S19 Pro', 'ASIC S17+', 'Custom ASIC'][Math.floor(Math.random() * 3)],
+        autoConfig: Math.random() > 0.3,
+        lastUpdate: new Date().toISOString(),
+        createdAt: new Date().toISOString()
+      }));
+
+      res.json(rigs);
+    } catch (error) {
+      console.error('Error fetching mining rigs:', error);
+      res.status(500).json({ error: 'Failed to fetch mining rigs' });
+    }
+  });
+
+  app.post('/api/mining/rigs/:rigId/control', async (req, res) => {
+    try {
+      const { rigId } = req.params;
+      const { action } = req.body;
+      res.json({ success: true, message: `Rig ${rigId} ${action} command executed` });
+    } catch (error) {
+      console.error('Error controlling rig:', error);
+      res.status(500).json({ error: 'Failed to control rig' });
+    }
+  });
+
+  app.put('/api/mining/rigs/:rigId', async (req, res) => {
+    try {
+      const { rigId } = req.params;
+      res.json({ success: true, message: `Rig ${rigId} updated successfully` });
+    } catch (error) {
+      console.error('Error updating rig:', error);
+      res.status(500).json({ error: 'Failed to update rig' });
+    }
+  });
+
+  app.post('/api/mining/rigs', async (req, res) => {
+    try {
+      const rigData = req.body;
+      const newRig = {
+        id: `rig-${Date.now()}`,
+        ...rigData,
+        status: 'offline',
+        createdAt: new Date().toISOString()
+      };
+      res.json(newRig);
+    } catch (error) {
+      console.error('Error adding rig:', error);
+      res.status(500).json({ error: 'Failed to add rig' });
+    }
+  });
+
+  app.delete('/api/mining/rigs/:rigId', async (req, res) => {
+    try {
+      const { rigId } = req.params;
+      res.json({ success: true, message: `Rig ${rigId} deleted successfully` });
+    } catch (error) {
+      console.error('Error deleting rig:', error);
+      res.status(500).json({ error: 'Failed to delete rig' });
+    }
+  });
+
+  // Mining Pools endpoints
+  app.get('/api/pools', async (req, res) => {
+    try {
+      const pools = [
+        {
+          id: 'pool-1',
+          name: 'KLOUDBUGSCAFE POOL',
+          url: 'stratum+tcp://kloudbugscafe.pool:4444',
+          status: 'connected',
+          hashRate: 450.5,
+          address: 'bc1qj93mnxgm0xuwyh3jvvqurjxjyq8uktg4y0sad6',
+          username: 'Kloudbugs7',
+          managed: true,
+          fees: 1.5,
+          connectedRigs: 12,
+          teraTokenSupport: true,
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: 'pool-2',
+          name: 'TERA SOCIAL JUSTICE POOL',
+          url: 'stratum+tcp://terasocial.pool:3333',
+          status: 'connected',
+          hashRate: 380.2,
+          address: 'bc1qfavnkrku005m4kdkvdtgthur4ha06us2lppdps',
+          username: 'Kloudbugs7',
+          managed: true,
+          fees: 0.5,
+          connectedRigs: 13,
+          teraTokenSupport: true,
+          createdAt: new Date().toISOString()
+        }
+      ];
+      res.json(pools);
+    } catch (error) {
+      console.error('Error fetching pools:', error);
+      res.status(500).json({ error: 'Failed to fetch pools' });
+    }
+  });
+
+  app.post('/api/pools', async (req, res) => {
+    try {
+      const poolData = req.body;
+      const newPool = {
+        id: `pool-${Date.now()}`,
+        ...poolData,
+        status: 'disconnected',
+        hashRate: 0,
+        connectedRigs: 0,
+        managed: true,
+        createdAt: new Date().toISOString()
+      };
+      res.json(newPool);
+    } catch (error) {
+      console.error('Error adding pool:', error);
+      res.status(500).json({ error: 'Failed to add pool' });
+    }
+  });
+
+  app.put('/api/pools/:poolId', async (req, res) => {
+    try {
+      const { poolId } = req.params;
+      res.json({ success: true, message: `Pool ${poolId} updated successfully` });
+    } catch (error) {
+      console.error('Error updating pool:', error);
+      res.status(500).json({ error: 'Failed to update pool' });
+    }
+  });
+
+  app.delete('/api/pools/:poolId', async (req, res) => {
+    try {
+      const { poolId } = req.params;
+      res.json({ success: true, message: `Pool ${poolId} deleted successfully` });
+    } catch (error) {
+      console.error('Error deleting pool:', error);
+      res.status(500).json({ error: 'Failed to delete pool' });
+    }
+  });
+
+  app.post('/api/pools/:poolId/config', async (req, res) => {
+    try {
+      const { poolId } = req.params;
+      res.json({ success: true, message: `Pool ${poolId} configuration uploaded successfully` });
+    } catch (error) {
+      console.error('Error uploading pool config:', error);
+      res.status(500).json({ error: 'Failed to upload pool configuration' });
+    }
+  });
+
+  // TERA Token endpoints
+  app.get('/api/tera/tokens', async (req, res) => {
+    try {
+      const teraTokens = {
+        id: 'tera-1',
+        walletAddress: '0x742d35Cc6634C0532925a3b8D6A5C8C7E1234567',
+        balance: 125000.50,
+        stakingBalance: 50000.00,
+        totalEarned: 175000.50,
+        socialContribution: 52500.15,
+        lastTransaction: new Date().toISOString(),
+        createdAt: new Date().toISOString()
+      };
+      res.json(teraTokens);
+    } catch (error) {
+      console.error('Error fetching TERA tokens:', error);
+      res.status(500).json({ error: 'Failed to fetch TERA tokens' });
+    }
+  });
+
+  // Withdrawals endpoints
+  app.get('/api/withdrawals', async (req, res) => {
+    try {
+      const withdrawals = [
+        {
+          id: 'withdrawal-1',
+          tokenType: 'BTC',
+          amount: 0.025,
+          toAddress: 'bc1qj93mnxgm0xuwyh3jvvqurjxjyq8uktg4y0sad6',
+          status: 'completed',
+          txHash: '1a2b3c4d5e6f7890abcdef1234567890abcdef1234567890abcdef1234567890',
+          createdAt: new Date(Date.now() - 86400000).toISOString(),
+          completedAt: new Date(Date.now() - 82800000).toISOString()
+        }
+      ];
+      res.json(withdrawals);
+    } catch (error) {
+      console.error('Error fetching withdrawals:', error);
+      res.status(500).json({ error: 'Failed to fetch withdrawals' });
+    }
+  });
+
+  app.post('/api/withdrawals', async (req, res) => {
+    try {
+      const { tokenType, amount, toAddress } = req.body;
+      const withdrawal = {
+        id: `withdrawal-${Date.now()}`,
+        tokenType,
+        amount,
+        toAddress,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+      res.json(withdrawal);
+    } catch (error) {
+      console.error('Error creating withdrawal:', error);
+      res.status(500).json({ error: 'Failed to create withdrawal' });
+    }
+  });
+
   // Mining and Social Impact endpoints
   app.get('/api/mining/operations', async (req, res) => {
     try {

@@ -113,3 +113,122 @@ export type BotSettings = typeof botSettings.$inferSelect;
 
 export type InsertPriceData = z.infer<typeof insertPriceDataSchema>;
 export type PriceData = typeof priceData.$inferSelect;
+
+// AI Agents Management
+export const aiAgents = pgTable("ai_agents", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  type: text("type").notNull(), // 'ghost', 'mining', 'trading', 'social'
+  status: text("status").notNull().default('offline'), // 'online', 'offline', 'error'
+  config: text("config"), // JSON string
+  pythonScript: text("python_script"),
+  permissions: text("permissions"), // JSON array
+  lastActive: timestamp("last_active").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Enhanced Mining Rigs (25 rigs)
+export const miningRigs = pgTable("mining_rigs", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  type: text("type").notNull().default('bitcoin'),
+  hashrate: decimal("hashrate", { precision: 10, scale: 2 }),
+  powerDraw: integer("power_draw"),
+  temperature: integer("temperature"),
+  status: text("status").notNull().default('offline'), // 'online', 'offline', 'maintenance', 'error'
+  efficiency: decimal("efficiency", { precision: 5, scale: 2 }),
+  dailyRevenue: decimal("daily_revenue", { precision: 10, scale: 2 }),
+  location: text("location"),
+  poolId: text("pool_id"),
+  hardware: text("hardware"),
+  autoConfig: boolean("auto_config").default(true),
+  pythonScript: text("python_script"),
+  aiAgentId: text("ai_agent_id"),
+  lastUpdate: timestamp("last_update").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Custom Mining Pools
+export const miningPools = pgTable("mining_pools", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  url: text("url").notNull(),
+  status: text("status").notNull().default('disconnected'), // 'connected', 'disconnected', 'error'
+  hashRate: decimal("hash_rate", { precision: 12, scale: 2 }),
+  address: text("address").notNull(),
+  username: text("username").notNull(),
+  password: text("password"),
+  managed: boolean("managed").default(true),
+  fees: decimal("fees", { precision: 5, scale: 2 }),
+  connectedRigs: integer("connected_rigs").default(0),
+  teraTokenSupport: boolean("tera_token_support").default(false),
+  customConfig: text("custom_config"), // JSON string
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// TERA Token Management
+export const teraTokens = pgTable("tera_tokens", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  walletAddress: text("wallet_address").notNull(),
+  balance: decimal("balance", { precision: 18, scale: 8 }),
+  stakingBalance: decimal("staking_balance", { precision: 18, scale: 8 }),
+  totalEarned: decimal("total_earned", { precision: 18, scale: 8 }),
+  socialContribution: decimal("social_contribution", { precision: 18, scale: 8 }),
+  lastTransaction: timestamp("last_transaction"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Withdrawal Management
+export const withdrawals = pgTable("withdrawals", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: integer("user_id").references(() => users.id),
+  tokenType: text("token_type").notNull(), // 'BTC', 'ETH', 'TERA', etc.
+  amount: decimal("amount", { precision: 18, scale: 8 }),
+  toAddress: text("to_address").notNull(),
+  status: text("status").notNull().default('pending'), // 'pending', 'approved', 'completed', 'failed'
+  approvedBy: text("approved_by"), // AI agent that approved
+  txHash: text("tx_hash"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
+});
+
+// AI Agent schemas
+export const insertAiAgentSchema = createInsertSchema(aiAgents).omit({
+  id: true,
+  createdAt: true,
+  lastActive: true,
+});
+
+export const insertMiningRigSchema = createInsertSchema(miningRigs).omit({
+  id: true,
+  createdAt: true,
+  lastUpdate: true,
+});
+
+export const insertMiningPoolSchema = createInsertSchema(miningPools).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertTeraTokenSchema = createInsertSchema(teraTokens).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertWithdrawalSchema = createInsertSchema(withdrawals).omit({
+  id: true,
+  createdAt: true,
+  completedAt: true,
+});
+
+// Types
+export type AiAgent = typeof aiAgents.$inferSelect;
+export type InsertAiAgent = z.infer<typeof insertAiAgentSchema>;
+export type MiningRig = typeof miningRigs.$inferSelect;
+export type InsertMiningRig = z.infer<typeof insertMiningRigSchema>;
+export type MiningPool = typeof miningPools.$inferSelect;
+export type InsertMiningPool = z.infer<typeof insertMiningPoolSchema>;
+export type TeraToken = typeof teraTokens.$inferSelect;
+export type InsertTeraToken = z.infer<typeof insertTeraTokenSchema>;
+export type Withdrawal = typeof withdrawals.$inferSelect;
+export type InsertWithdrawal = z.infer<typeof insertWithdrawalSchema>;
