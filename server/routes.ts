@@ -1401,6 +1401,239 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Cafe API endpoints
+  app.get('/api/cafe/menu', (req, res) => {
+    res.json([
+      {
+        id: 'coffee-1',
+        name: 'KLOUD Espresso',
+        description: 'Signature dark roast blend with cosmic energy',
+        price: 4.50,
+        category: 'coffee',
+        available: true,
+        rating: 4.8,
+        orders: 1247
+      },
+      {
+        id: 'coffee-2',
+        name: 'TERA Latte',
+        description: 'Smooth latte with justice-inspired foam art',
+        price: 5.25,
+        category: 'coffee',
+        available: true,
+        rating: 4.9,
+        orders: 892
+      }
+    ]);
+  });
+
+  app.get('/api/cafe/orders', (req, res) => {
+    res.json([
+      {
+        id: 'order-1',
+        items: [{ name: 'KLOUD Espresso', quantity: 2 }],
+        total: 9.00,
+        status: 'preparing',
+        customerName: 'Alex',
+        orderTime: '09:15 AM',
+        estimatedReady: '09:25 AM'
+      }
+    ]);
+  });
+
+  app.get('/api/cafe/events', (req, res) => {
+    res.json([
+      {
+        id: 'event-1',
+        title: 'Crypto Trading Workshop',
+        description: 'Learn advanced trading strategies with KLOUD BOT PRO',
+        date: '2024-02-15',
+        time: '2:00 PM',
+        capacity: 25,
+        registered: 18,
+        type: 'workshop'
+      }
+    ]);
+  });
+
+  // TERA Token API endpoints
+  app.get('/api/tera/metrics', (req, res) => {
+    res.json({
+      totalSupply: 1000000000,
+      circulatingSupply: 750000000,
+      lockedTokens: 200000000,
+      price: 0.52,
+      marketCap: 390000000,
+      volume24h: 15678900,
+      holders: 45678,
+      burnedTokens: 50000000
+    });
+  });
+
+  app.get('/api/tera/transactions', (req, res) => {
+    res.json([
+      {
+        id: 'tx-1',
+        type: 'transfer',
+        amount: 1000,
+        from: '0x742d35Cc...C4de',
+        to: '0x8ba1f109...B29e',
+        timestamp: '2024-01-17T10:30:00Z',
+        txHash: '0x123...abc',
+        status: 'confirmed'
+      }
+    ]);
+  });
+
+  app.get('/api/tera/staking', (req, res) => {
+    res.json([
+      {
+        id: 'pool-1',
+        name: 'Justice Impact Pool',
+        apr: 15.5,
+        lockPeriod: 90,
+        totalStaked: 45000000,
+        maxStake: 100000,
+        minStake: 100,
+        rewards: 156789,
+        participants: 1247
+      }
+    ]);
+  });
+
+  app.get('/api/tera/governance', (req, res) => {
+    res.json([
+      {
+        id: 'prop-1',
+        title: 'Increase Community Development Fund',
+        description: 'Proposal to allocate additional 5M TERA tokens to community development initiatives',
+        proposer: '0x742d35Cc...C4de',
+        status: 'active',
+        votesFor: 15678900,
+        votesAgainst: 3456789,
+        totalVotes: 19135689,
+        endDate: '2024-02-15T23:59:59Z',
+        category: 'treasury'
+      }
+    ]);
+  });
+
+  // Platform API endpoints
+  app.get('/api/platform/services', (req, res) => {
+    res.json([
+      {
+        id: 'trading-api',
+        name: 'Trading API',
+        status: 'running',
+        type: 'api',
+        version: '2.1.4',
+        uptime: 99.8,
+        cpu: 35,
+        memory: 512,
+        requests: 15678,
+        errors: 12,
+        endpoint: '/api/trading',
+        description: 'Core trading functionality and market data'
+      },
+      {
+        id: 'terajustice-ai',
+        name: 'TERJustice AI Engine',
+        status: 'running',
+        type: 'ai',
+        version: '3.0.1',
+        uptime: 98.5,
+        cpu: 65,
+        memory: 1024,
+        requests: 4567,
+        errors: 8,
+        endpoint: '/api/terajustice',
+        description: 'Legal research and case analysis AI'
+      }
+    ]);
+  });
+
+  app.get('/api/platform/integrations', (req, res) => {
+    res.json([
+      {
+        id: 'external-exchange',
+        name: 'External Exchange Connector',
+        type: 'external',
+        status: 'active',
+        endpoints: ['/api/external/binance', '/api/external/coinbase'],
+        dependencies: ['trading-api'],
+        config: { 
+          apiKeys: 'configured',
+          rateLimit: '1000/min',
+          timeout: '30s'
+        }
+      }
+    ]);
+  });
+
+  app.get('/api/platform/deployments', (req, res) => {
+    res.json([
+      {
+        id: 'prod-config',
+        name: 'Production Environment',
+        environment: 'production',
+        replicas: 3,
+        resources: {
+          cpu: '2 cores',
+          memory: '4 GB',
+          storage: '100 GB'
+        },
+        scaling: {
+          min: 2,
+          max: 10,
+          targetCpu: 70
+        }
+      }
+    ]);
+  });
+
+  // Admin Journal API endpoints
+  app.get('/api/admin/journal', (req, res) => {
+    res.json([
+      {
+        id: 'entry-1',
+        title: 'Tera4-24-72 Justice ai-/KLOUD BUGS Platform Launch Preparation',
+        content: 'Major milestone reached with full platform integration...',
+        category: 'achievements',
+        priority: 'high',
+        status: 'published',
+        tags: ['launch', 'integration', 'milestone'],
+        author: 'System Admin',
+        createdAt: '2024-02-03T20:15:00Z',
+        updatedAt: '2024-02-03T21:00:00Z'
+      }
+    ]);
+  });
+
+  app.get('/api/admin/tasks', (req, res) => {
+    res.json([
+      {
+        id: 'task-1',
+        title: 'Implement Folder-Based App Integration',
+        description: 'Build system to automatically scan folders and integrate external applications',
+        category: 'feature',
+        status: 'pending',
+        priority: 'high',
+        assignedTo: 'Next Agent',
+        dueDate: '2024-02-10',
+        progress: 0,
+        dependencies: ['platform-management-complete']
+      }
+    ]);
+  });
+
+  app.get('/api/admin/metrics', (req, res) => {
+    res.json([
+      { name: 'Platform Uptime', value: '99.7%', status: 'good', lastUpdated: '2024-02-03T21:00:00Z', trend: 'stable' },
+      { name: 'Active Services', value: 6, status: 'good', lastUpdated: '2024-02-03T21:00:00Z', trend: 'stable' },
+      { name: 'Memory Usage', value: '67%', status: 'warning', lastUpdated: '2024-02-03T21:00:00Z', trend: 'up' }
+    ]);
+  });
+
   // Initialize AI Manager and trading bot on server start
   aiManager.initialize().catch(error => {
     console.error('Failed to initialize AI Manager:', error);

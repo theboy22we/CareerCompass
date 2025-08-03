@@ -11,6 +11,10 @@ import MiningRigs from "@/pages/mining-rigs";
 import CustomPools from "@/pages/custom-pools";
 import CryptoPortfolio from "@/pages/crypto-portfolio";
 import TERJusticeAI from "@/pages/terajustice-ai";
+import Cafe from "@/pages/cafe";
+import TeraToken from "@/pages/tera-token";
+import Platform from "@/pages/platform";
+import AdminJournal from "@/pages/admin-journal";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -38,6 +42,10 @@ function Router() {
           <Route path="/custom-pools" component={CustomPools} />
           <Route path="/crypto-portfolio" component={CryptoPortfolio} />
           <Route path="/terajustice-ai" component={TERJusticeAI} />
+          <Route path="/cafe" component={Cafe} />
+          <Route path="/tera-token" component={TeraToken} />
+          <Route path="/platform" component={Platform} />
+          <Route path="/admin-journal" component={AdminJournal} />
           <Route component={NotFound} />
         </Switch>
       </main>
