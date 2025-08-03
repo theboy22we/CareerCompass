@@ -9,6 +9,7 @@ The system is designed as a comprehensive trading platform that provides technic
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+AI Strategy: Building own custom AI models rather than using third-party providers like OpenAI/Anthropic.
 
 ## System Architecture
 
@@ -38,7 +39,9 @@ Preferred communication style: Simple, everyday language.
 ### Trading System Architecture
 - **Market Data**: Kraken API integration for real-time Bitcoin price feeds
 - **Technical Analysis**: Custom indicators including RSI, MACD, Bollinger Bands, and moving averages
-- **AI Predictions**: Machine learning predictor with pattern recognition and success rate tracking
+- **AI System**: Modular AI manager supporting multiple AI providers and custom models
+- **Custom AI Integration**: Framework for integrating user's own AI models via HTTP API
+- **Multi-Model Predictions**: Simultaneous predictions from multiple AI models with confidence scoring
 - **Risk Management**: Portfolio manager with position sizing, stop-loss, and take-profit mechanisms
 - **Automated Scaling**: Dynamic position size adjustment based on performance metrics
 
@@ -72,7 +75,9 @@ Preferred communication style: Simple, everyday language.
 ### Trading & Market Data
 - **Kraken API**: Real-time cryptocurrency market data (WebSocket and REST)
 - **Technical Indicators**: Custom implementation of trading indicators
-- **Machine Learning**: Pattern recognition and prediction algorithms
+- **AI Manager**: Comprehensive AI system for custom model integration
+- **Custom AI Framework**: HTTP API interface for user's own AI models
+- **Multi-Provider Support**: Framework supporting OpenAI, Anthropic, and custom AI providers
 
 ### Development Dependencies
 - **typescript**: Static type checking

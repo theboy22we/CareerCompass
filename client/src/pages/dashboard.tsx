@@ -8,6 +8,7 @@ import { NotificationSystem, useNotifications } from '@/components/notification-
 import { AIPredictionPanel } from '@/components/ai-prediction-panel';
 import { AutoTradingPanel } from '@/components/auto-trading-panel';
 import { MarketSentimentPanel } from '@/components/market-sentiment-panel';
+import { AIDashboard } from '@/components/ai-dashboard';
 import { SimpleLiveChart } from '@/components/simple-live-chart';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { MarketSelector } from '@/components/market-selector';

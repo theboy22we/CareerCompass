@@ -8,6 +8,7 @@ import { TechnicalAnalysis } from "./technical-indicators";
 import { mlPredictor } from "./ml-predictor";
 import { AdvancedAnalytics } from "./advanced-analytics";
 import { portfolioManager } from "./portfolio-manager";
+import { aiManager } from "./ai-manager";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -558,8 +559,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const ohlcData = await krakenAPI.getOHLCData();
       const prices = ohlcData.map(d => d.close);
       
-      const levels = advancedAnalytics.findSupportResistance(prices);
-      const fibonacci = advancedAnalytics.calculateFibonacci(
+      const levels = AdvancedAnalytics.findSupportResistance(prices);
+      const fibonacci = AdvancedAnalytics.calculateFibonacci(
         Math.max(...prices.slice(-50)),
         Math.min(...prices.slice(-50))
       );
@@ -574,7 +575,184 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Initialize trading bot on server start
+  // AI Models Management Routes
+  app.get('/api/ai/models', async (req, res) => {
+    try {
+      const models = aiManager.getAllModels();
+      const stats = aiManager.getModelStats();
+      
+      res.json({
+        models,
+        stats,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get AI models' });
+    }
+  });
+
+  // Get AI predictions from multiple models
+  app.get('/api/ai/predictions', async (req, res) => {
+    try {
+      const ticker = await krakenAPI.getTicker();
+      const ohlcData = await krakenAPI.getOHLCData();
+      const prices = ohlcData.map(d => d.close);
+      const indicators = TechnicalAnalysis.calculateIndicators(prices);
+      
+      const predictions = await aiManager.generatePrediction(ticker, indicators);
+      
+      res.json({
+        predictions,
+        timestamp: Date.now(),
+        modelCount: predictions.length
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to generate AI predictions' });
+    }
+  });
+
+  // Get AI market analysis from multiple models
+  app.get('/api/ai/analysis', async (req, res) => {
+    try {
+      const ticker = await krakenAPI.getTicker();
+      const ohlcData = await krakenAPI.getOHLCData();
+      const prices = ohlcData.map(d => d.close);
+      const indicators = TechnicalAnalysis.calculateIndicators(prices);
+      
+      const analysis = await aiManager.analyzeMarket(ticker, indicators);
+      
+      res.json({
+        analysis,
+        timestamp: Date.now(),
+        modelCount: analysis.length
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to generate AI analysis' });
+    }
+  });
+
+  // Generate trading strategies from AI models
+  app.get('/api/ai/strategies', async (req, res) => {
+    try {
+      const ticker = await krakenAPI.getTicker();
+      const ohlcData = await krakenAPI.getOHLCData();
+      const prices = ohlcData.map(d => d.close);
+      const indicators = TechnicalAnalysis.calculateIndicators(prices);
+      
+      const marketConditions = {
+        price: ticker.price,
+        trend: indicators.sma20 > indicators.sma50 ? 'UPTREND' : 'DOWNTREND',
+        volatility: indicators.bollinger.width,
+        momentum: indicators.rsi,
+        volume: ticker.volume24h
+      };
+      
+      const strategies = await aiManager.generateStrategy(marketConditions);
+      
+      res.json({
+        strategies,
+        marketConditions,
+        timestamp: Date.now(),
+        modelCount: strategies.length
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to generate AI strategies' });
+    }
+  });
+
+  // Add custom AI model
+  app.post('/api/ai/models', async (req, res) => {
+    try {
+      const modelConfig = req.body;
+      
+      // Validate required fields
+      if (!modelConfig.id || !modelConfig.name || !modelConfig.endpoint || !modelConfig.modelName || !modelConfig.type) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+
+      aiManager.addCustomModel(modelConfig);
+      
+      res.json({
+        success: true,
+        message: `Custom AI model ${modelConfig.name} added successfully`,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to add custom AI model' });
+    }
+  });
+
+  // Remove custom AI model
+  app.delete('/api/ai/models/:modelId', async (req, res) => {
+    try {
+      const { modelId } = req.params;
+      const success = aiManager.removeCustomModel(modelId);
+      
+      if (success) {
+        res.json({
+          success: true,
+          message: `Model ${modelId} removed successfully`,
+          timestamp: Date.now()
+        });
+      } else {
+        res.status(404).json({ error: 'Model not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to remove custom AI model' });
+    }
+  });
+
+  // Test custom AI model connection
+  app.post('/api/ai/models/:modelId/test', async (req, res) => {
+    try {
+      const { modelId } = req.params;
+      const models = aiManager.getAllModels();
+      const model = models.find(m => m.id === modelId);
+      
+      if (!model || model.provider !== 'custom') {
+        return res.status(404).json({ error: 'Custom model not found' });
+      }
+
+      // Test with sample data
+      const testPayload = {
+        type: model.type,
+        marketData: { price: 43000, change24h: 0, volume: 1000000 },
+        indicators: { rsi: 50, macd: 0 }
+      };
+
+      const response = await fetch(model.endpoint!, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${model.apiKey}`,
+          ...model.headers
+        },
+        body: JSON.stringify(testPayload)
+      });
+
+      const result = await response.json();
+      
+      res.json({
+        success: response.ok,
+        status: response.status,
+        result: response.ok ? result : null,
+        error: response.ok ? null : result.error,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false, 
+        error: error.message,
+        timestamp: Date.now()
+      });
+    }
+  });
+
+  // Initialize AI Manager and trading bot on server start
+  aiManager.initialize().catch(error => {
+    console.error('Failed to initialize AI Manager:', error);
+  });
+  
   tradingBot.initialize().catch(error => {
     console.error('Failed to initialize trading bot:', error);
   });
