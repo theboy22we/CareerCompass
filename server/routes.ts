@@ -9,6 +9,7 @@ import { mlPredictor } from "./ml-predictor";
 import { AdvancedAnalytics } from "./advanced-analytics";
 import { portfolioManager } from "./portfolio-manager";
 import { aiManager } from "./ai-manager";
+import { socialTokenManager } from "./social-token-manager";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -745,6 +746,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
         error: error.message,
         timestamp: Date.now()
       });
+    }
+  });
+
+  // Mining and Social Impact endpoints
+  app.get('/api/mining/operations', async (req, res) => {
+    try {
+      const operations = socialTokenManager.getMiningOperations();
+      const summary = socialTokenManager.getOperationalSummary();
+      res.json({ operations, summary: summary.mining });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get mining operations' });
+    }
+  });
+
+  app.get('/api/social/projects', async (req, res) => {
+    try {
+      const projects = socialTokenManager.getProjects();
+      const summary = socialTokenManager.getSocialImpactSummary();
+      res.json({ projects, summary });
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get social projects' });
+    }
+  });
+
+  app.get('/api/social/token-metrics', async (req, res) => {
+    try {
+      const metrics = socialTokenManager.getTokenMetrics();
+      res.json(metrics);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get token metrics' });
+    }
+  });
+
+  app.get('/api/operations/summary', async (req, res) => {
+    try {
+      const summary = socialTokenManager.getOperationalSummary();
+      res.json(summary);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to get operational summary' });
     }
   });
 

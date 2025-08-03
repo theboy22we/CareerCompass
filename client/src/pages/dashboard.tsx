@@ -9,6 +9,8 @@ import { AIPredictionPanel } from '@/components/ai-prediction-panel';
 import { AutoTradingPanel } from '@/components/auto-trading-panel';
 import { MarketSentimentPanel } from '@/components/market-sentiment-panel';
 import { AIDashboard } from '@/components/ai-dashboard';
+import { MiningDashboard } from '@/components/mining-dashboard';
+import { SocialImpactDashboard } from '@/components/social-impact-dashboard';
 import { SimpleLiveChart } from '@/components/simple-live-chart';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { MarketSelector } from '@/components/market-selector';
@@ -560,6 +562,24 @@ export default function Dashboard() {
                 }}
                 className="w-full"
               />
+            </div>
+
+            {/* Mining Operations Dashboard */}
+            <div className="mt-8">
+              <h2 className="text-xl font-bold text-cyber-gold mb-4 flex items-center gap-2">
+                <i className="fas fa-pickaxe" />
+                Mining Operations
+              </h2>
+              <MiningDashboard />
+            </div>
+
+            {/* Social Impact Dashboard */}
+            <div className="mt-8">
+              <h2 className="text-xl font-bold text-cyber-gold mb-4 flex items-center gap-2">
+                <i className="fas fa-heart" />
+                Social Justice Impact
+              </h2>
+              <SocialImpactDashboard />
             </div>
           </div>
 

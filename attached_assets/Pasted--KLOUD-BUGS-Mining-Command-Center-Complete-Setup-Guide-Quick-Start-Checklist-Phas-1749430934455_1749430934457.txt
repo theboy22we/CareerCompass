@@ -1,0 +1,766 @@
+# KLOUD BUGS Mining Command Center - Complete Setup Guide
+
+## 🚀 Quick Start Checklist
+
+### Phase 1: System Preparation
+- [ ] Ubuntu 22.04 LTS installed and updated
+- [ ] Docker and Docker Compose installed
+- [ ] Node.js 18+ installed
+- [ ] Git configured
+- [ ] Firewall configured
+- [ ] SSL certificates obtained
+
+### Phase 2: Project Setup
+- [ ] Project repository cloned/created
+- [ ] Environment variables configured
+- [ ] Database initialized
+- [ ] TERA Guardians deployed
+- [ ] Security hardening completed
+
+### Phase 3: Production Deployment
+- [ ] Monitoring setup
+- [ ] Backup systems configured
+- [ ] Performance optimized
+- [ ] Documentation completed
+
+---
+
+## 🖥️ Ubuntu System Setup
+
+### Initial System Configuration
+```bash
+# Update system
+sudo apt update && sudo apt upgrade -y
+
+# Install essential packages
+sudo apt install -y curl wget git vim htop ufw fail2ban
+
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+sudo usermod -aG docker $USER
+newgrp docker
+
+# Install Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Install Node.js 18
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verify installations
+docker --version
+docker-compose --version
+node --version
+npm --version
+```
+
+### Security Configuration
+```bash
+# Configure UFW firewall
+sudo ufw enable
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 8080:8084/tcp
+
+# Configure fail2ban
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+# Create secure user for KLOUD BUGS
+sudo useradd -m -s /bin/bash kloudbugs
+sudo usermod -aG docker kloudbugs
+sudo mkdir -p /home/kloudbugs/.ssh
+```
+
+---
+
+## 📁 Project Structure
+
+```
+kloud-bugs-mining/
+├── docker-compose.yml
+├── docker-compose.prod.yml
+├── docker-compose.monitoring.yml
+├── .env
+├── .env.example
+├── nginx/
+│   ├── nginx.conf
+│   └── ssl/
+├── api/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── src/
+│   │   ├── app.js
+│   │   ├── routes/
+│   │   ├── models/
+│   │   └── services/
+├── websocket/
+│   ├── Dockerfile
+│   ├── tera-coordinator.js
+│   └── package.json
+├── tera-guardians/
+│   ├── miner/
+│   ├── secure/
+│   ├── exchange/
+│   └── community/
+├── frontend/
+│   ├── Dockerfile
+│   ├── public/
+│   └── src/
+├── database/
+│   ├── init.sql
+│   ├── migrations/
+│   └── seeds/
+├── monitoring/
+│   ├── prometheus.yml
+│   └── grafana/
+├── scripts/
+│   ├── deploy.sh
+│   ├── backup.sh
+│   └── health-check.sh
+└── docs/
+    ├── API.md
+    ├── DEPLOYMENT.md
+    └── TROUBLESHOOTING.md
+```
+
+---
+
+## 🐳 Docker Configuration Files
+
+### Main Docker Compose (docker-compose.yml)
+```yaml
+version: '3.8'
+
+networks:
+  kloud-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  grafana_data:
+  prometheus_data:
+
+services:
+  # Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: kloud-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+      - websocket
+    networks:
+      - kloud-network
+
+  # API Server
+  api:
+    build: ./api
+    container_name: kloud-api
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - API_RATE_LIMIT=${API_RATE_LIMIT}
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - kloud-network
+    volumes:
+      - ./logs:/app/logs
+
+  # WebSocket Server
+  websocket:
+    build: ./websocket
+    container_name: kloud-websocket
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+      - "8084:8084"
+    environment:
+      - TERA_ENCRYPTION_KEY=${TERA_ENCRYPTION_KEY}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    depends_on:
+      - redis
+    networks:
+      - kloud-network
+
+  # Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: kloud-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./backups:/backups
+    networks:
+      - kloud-network
+    ports:
+      - "5432:5432"
+
+  # Redis Cache
+  redis:
+    image: redis:alpine
+    container_name: kloud-redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    networks:
+      - kloud-network
+
+  # TERA Guardians
+  tera-miner:
+    build: ./tera-guardians/miner
+    container_name: tera-miner
+    restart: unless-stopped
+    environment:
+      - GUARDIAN_ID=TeraMiner
+      - COORDINATOR_HOST=websocket
+      - COORDINATOR_PORT=8081
+      - MINING_POOL_URL=${MINING_POOL_URL}
+      - WALLET_ADDRESS=${WALLET_ADDRESS}
+    depends_on:
+      - websocket
+      - postgres
+    networks:
+      - kloud-network
+
+  tera-secure:
+    build: ./tera-guardians/secure
+    container_name: tera-secure
+    restart: unless-stopped
+    environment:
+      - GUARDIAN_ID=TeraSecure
+      - COORDINATOR_HOST=websocket
+      - COORDINATOR_PORT=8082
+      - SECURITY_LEVEL=maximum
+    depends_on:
+      - websocket
+      - postgres
+    networks:
+      - kloud-network
+
+  tera-exchange:
+    build: ./tera-guardians/exchange
+    container_name: tera-exchange
+    restart: unless-stopped
+    environment:
+      - GUARDIAN_ID=TeraExchange
+      - COORDINATOR_HOST=websocket
+      - COORDINATOR_PORT=8083
+    depends_on:
+      - websocket
+      - postgres
+    networks:
+      - kloud-network
+
+  tera-community:
+    build: ./tera-guardians/community
+    container_name: tera-community
+    restart: unless-stopped
+    environment:
+      - GUARDIAN_ID=TeraCommunity
+      - COORDINATOR_HOST=websocket
+      - COORDINATOR_PORT=8084
+    depends_on:
+      - websocket
+      - postgres
+    networks:
+      - kloud-network
+```
+
+### Environment Variables (.env.example)
+```bash
+# Copy to .env and fill in your values
+
+# Database Configuration
+DB_NAME=kloud_bugs
+DB_USER=kloud_admin
+DB_PASSWORD=your_secure_database_password_here
+
+# Redis Configuration
+REDIS_PASSWORD=your_secure_redis_password_here
+
+# API Security
+JWT_SECRET=your_jwt_secret_key_minimum_32_characters
+API_RATE_LIMIT=1000
+
+# TERA Guardian Configuration
+TERA_ENCRYPTION_KEY=your_64_character_encryption_key_for_inter_ai_communication
+
+# Mining Configuration
+MINING_POOL_URL=stratum+tcp://your-pool.com:4444
+WALLET_ADDRESS=your_cryptocurrency_wallet_address_here
+
+# SSL Configuration
+SSL_CERT_PATH=/etc/nginx/ssl/cert.pem
+SSL_KEY_PATH=/etc/nginx/ssl/key.pem
+
+# Monitoring
+GRAFANA_PASSWORD=your_grafana_admin_password
+PROMETHEUS_RETENTION=30d
+
+# Backup Configuration
+BACKUP_ENCRYPTION_KEY=your_backup_encryption_passphrase
+BACKUP_S3_BUCKET=your-backup-bucket-name
+AWS_ACCESS_KEY_ID=your_aws_access_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+
+# Notification Webhooks
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/your/webhook/url
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/your/webhook/url
+
+# Development Mode
+DEBUG=false
+LOG_LEVEL=info
+```
+
+---
+
+## 🔧 Essential Scripts
+
+### Deployment Script (scripts/deploy.sh)
+```bash
+#!/bin/bash
+set -e
+
+echo "🚀 Starting KLOUD BUGS deployment..."
+
+# Check if .env exists
+if [ ! -f .env ]; then
+    echo "❌ .env file not found! Copy .env.example to .env and configure it."
+    exit 1
+fi
+
+# Source environment variables
+source .env
+
+# Create necessary directories
+mkdir -p logs backups nginx/ssl
+
+# Pull latest code (if using git)
+if [ -d .git ]; then
+    echo "📥 Pulling latest code..."
+    git pull origin main
+fi
+
+# Build and start services
+echo "🔨 Building Docker images..."
+docker-compose build
+
+echo "📊 Starting database..."
+docker-compose up -d postgres redis
+
+# Wait for database to be ready
+echo "⏳ Waiting for database to be ready..."
+sleep 30
+
+# Run database migrations
+echo "🗄️ Running database migrations..."
+docker-compose run --rm api npm run migrate
+
+# Start all services
+echo "🚀 Starting all services..."
+docker-compose up -d
+
+# Wait for services to be ready
+echo "⏳ Waiting for services to start..."
+sleep 45
+
+# Health checks
+echo "🔍 Running health checks..."
+
+# Check API health
+if curl -f http://localhost/api/health > /dev/null 2>&1; then
+    echo "✅ API is healthy"
+else
+    echo "❌ API health check failed"
+    docker-compose logs api
+    exit 1
+fi
+
+# Check TERA Guardians
+for guardian in tera-miner tera-secure tera-exchange tera-community; do
+    if docker-compose ps $guardian | grep -q "Up"; then
+        echo "✅ $guardian is running"
+    else
+        echo "❌ $guardian is not running"
+        docker-compose logs $guardian
+    fi
+done
+
+# Check WebSocket connections
+if nc -z localhost 8080; then
+    echo "✅ WebSocket server is listening"
+else
+    echo "❌ WebSocket server is not responding"
+    exit 1
+fi
+
+echo "🎉 KLOUD BUGS deployment completed successfully!"
+
+# Send notification (optional)
+if [ ! -z "$SLACK_WEBHOOK_URL" ]; then
+    curl -X POST "$SLACK_WEBHOOK_URL" \
+        -H 'Content-type: application/json' \
+        --data '{"text":"🚀 KLOUD BUGS deployed successfully!"}'
+fi
+```
+
+### Backup Script (scripts/backup.sh)
+```bash
+#!/bin/bash
+set -e
+
+# Configuration
+BACKUP_DIR="/home/kloudbugs/backups"
+DATE=$(date +%Y-%m-%d_%H-%M-%S)
+BACKUP_PATH="$BACKUP_DIR/$DATE"
+
+# Create backup directory
+mkdir -p "$BACKUP_PATH"
+
+echo "📦 Starting backup process..."
+
+# Database backup
+echo "🗄️ Backing up database..."
+docker-compose exec -T postgres pg_dump -U $DB_USER $DB_NAME > "$BACKUP_PATH/database.sql"
+
+# Redis backup
+echo "🔄 Backing up Redis..."
+docker-compose exec -T redis redis-cli --rdb - > "$BACKUP_PATH/redis.rdb"
+
+# Application files backup
+echo "📁 Backing up application files..."
+cp -r ./api "$BACKUP_PATH/"
+cp -r ./websocket "$BACKUP_PATH/"
+cp -r ./tera-guardians "$BACKUP_PATH/"
+cp -r ./frontend "$BACKUP_PATH/"
+cp .env "$BACKUP_PATH/"
+cp docker-compose*.yml "$BACKUP_PATH/"
+
+# Logs backup
+echo "📋 Backing up logs..."
+cp -r ./logs "$BACKUP_PATH/" 2>/dev/null || true
+
+# Create compressed archive
+echo "🗜️ Creating compressed archive..."
+cd "$BACKUP_DIR"
+tar -czf "${DATE}.tar.gz" "$DATE"
+
+# Encrypt backup
+if [ ! -z "$BACKUP_ENCRYPTION_KEY" ]; then
+    echo "🔐 Encrypting backup..."
+    gpg --batch --yes --passphrase="$BACKUP_ENCRYPTION_KEY" --symmetric --cipher-algo AES256 "${DATE}.tar.gz"
+    rm "${DATE}.tar.gz"
+    echo "✅ Encrypted backup created: ${DATE}.tar.gz.gpg"
+else
+    echo "✅ Backup created: ${DATE}.tar.gz"
+fi
+
+# Cleanup old backups (keep last 7 days)
+find "$BACKUP_DIR" -name "*.tar.gz*" -mtime +7 -delete
+
+# Remove temporary directory
+rm -rf "$BACKUP_PATH"
+
+echo "✅ Backup completed successfully!"
+
+# Upload to S3 (optional)
+if [ ! -z "$BACKUP_S3_BUCKET" ]; then
+    echo "☁️ Uploading to S3..."
+    aws s3 cp "$BACKUP_DIR/${DATE}.tar.gz*" "s3://$BACKUP_S3_BUCKET/kloud-bugs-backups/"
+    echo "✅ Backup uploaded to S3"
+fi
+```
+
+### Health Check Script (scripts/health-check.sh)
+```bash
+#!/bin/bash
+
+echo "🔍 KLOUD BUGS Health Check Report"
+echo "================================="
+
+# Check system resources
+echo "💻 System Resources:"
+echo "CPU Usage: $(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'%' -f1)%"
+echo "Memory Usage: $(free | grep Mem | awk '{printf "%.1f%%", $3/$2 * 100.0}')"
+echo "Disk Usage: $(df -h / | awk 'NR==2{print $5}')"
+echo ""
+
+# Check Docker containers
+echo "🐳 Docker Containers:"
+docker-compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
+echo ""
+
+# Check API endpoints
+echo "🌐 API Endpoints:"
+endpoints=(
+    "http://localhost/api/health"
+    "http://localhost/api/status"
+    "http://localhost/api/guardians"
+)
+
+for endpoint in "${endpoints[@]}"; do
+    if curl -s -o /dev/null -w "%{http_code}" "$endpoint" | grep -q "200"; then
+        echo "✅ $endpoint - OK"
+    else
+        echo "❌ $endpoint - FAILED"
+    fi
+done
+echo ""
+
+# Check WebSocket connections
+echo "🔌 WebSocket Connections:"
+for port in 8080 8081 8082 8083 8084; do
+    if nc -z localhost $port; then
+        echo "✅ Port $port - OK"
+    else
+        echo "❌ Port $port - FAILED"
+    fi
+done
+echo ""
+
+# Check database connectivity
+echo "🗄️ Database Connectivity:"
+if docker-compose exec -T postgres pg_isready -U $DB_USER > /dev/null 2>&1; then
+    echo "✅ PostgreSQL - OK"
+else
+    echo "❌ PostgreSQL - FAILED"
+fi
+
+if docker-compose exec -T redis redis-cli ping > /dev/null 2>&1; then
+    echo "✅ Redis - OK"
+else
+    echo "❌ Redis - FAILED"
+fi
+echo ""
+
+# Check log files for errors
+echo "📋 Recent Errors:"
+error_count=$(docker-compose logs --since="1h" 2>&1 | grep -i error | wc -l)
+if [ $error_count -eq 0 ]; then
+    echo "✅ No errors in the last hour"
+else
+    echo "⚠️ $error_count errors found in the last hour"
+    echo "Recent errors:"
+    docker-compose logs --since="1h" 2>&1 | grep -i error | tail -5
+fi
+
+echo ""
+echo "🏁 Health check completed at $(date)"
+```
+
+---
+
+## 🛠️ Step-by-Step Setup Commands
+
+### Initial Setup
+```bash
+# 1. Create project directory
+mkdir -p /home/kloudbugs/kloud-bugs-mining
+cd /home/kloudbugs/kloud-bugs-mining
+
+# 2. Initialize git repository
+git init
+git remote add origin https://github.com/yourusername/kloud-bugs-mining.git
+
+# 3. Create environment file
+cp .env.example .env
+nano .env  # Configure your settings
+
+# 4. Generate encryption keys
+openssl rand -hex 32  # For TERA_ENCRYPTION_KEY
+openssl rand -hex 16  # For JWT_SECRET
+
+# 5. Set up SSL certificates
+sudo certbot --nginx -d yourdomain.com
+
+# 6. Make scripts executable
+chmod +x scripts/*.sh
+
+# 7. Create initial deployment
+./scripts/deploy.sh
+```
+
+### Daily Operations
+```bash
+# Check system health
+./scripts/health-check.sh
+
+# View logs
+docker-compose logs -f --tail=100
+
+# Restart specific service
+docker-compose restart tera-miner
+
+# Update and redeploy
+git pull origin main
+./scripts/deploy.sh
+
+# Create backup
+./scripts/backup.sh
+
+# Monitor resources
+htop
+docker stats
+```
+
+---
+
+## 🚨 Troubleshooting Guide
+
+### Common Issues and Solutions
+
+#### 1. Container Won't Start
+```bash
+# Check logs
+docker-compose logs [service-name]
+
+# Check if ports are in use
+sudo netstat -tlnp | grep :8080
+
+# Restart Docker daemon
+sudo systemctl restart docker
+```
+
+#### 2. Database Connection Issues
+```bash
+# Check if database is running
+docker-compose ps postgres
+
+# Test database connection
+docker-compose exec postgres psql -U $DB_USER -d $DB_NAME -c "SELECT version();"
+
+# Reset database
+docker-compose down
+docker volume rm kloud-bugs-mining_postgres_data
+docker-compose up -d postgres
+```
+
+#### 3. TERA Guardian Communication Fails
+```bash
+# Check WebSocket server
+docker-compose logs websocket
+
+# Test WebSocket connection
+wscat -c ws://localhost:8080
+
+# Restart all guardians
+docker-compose restart tera-miner tera-secure tera-exchange tera-community
+```
+
+#### 4. High Resource Usage
+```bash
+# Check resource usage
+docker stats
+
+# Optimize database
+docker-compose exec postgres psql -U $DB_USER -d $DB_NAME -c "VACUUM ANALYZE;"
+
+# Clear logs
+docker system prune -f
+
+# Restart services
+docker-compose restart
+```
+
+### Emergency Procedures
+
+#### Complete System Recovery
+```bash
+# 1. Stop all services
+docker-compose down
+
+# 2. Backup current state
+./scripts/backup.sh
+
+# 3. Restore from backup
+tar -xzf backups/2024-01-01_12-00-00.tar.gz
+cp -r 2024-01-01_12-00-00/* ./
+
+# 4. Rebuild and restart
+docker-compose build
+docker-compose up -d
+```
+
+---
+
+## 📞 Support and Monitoring
+
+### Log Locations
+- Application logs: `./logs/`
+- Docker logs: `docker-compose logs [service]`
+- System logs: `/var/log/syslog`
+- Nginx logs: `/var/log/nginx/`
+
+### Monitoring Commands
+```bash
+# Real-time system monitoring
+htop
+
+# Docker container monitoring
+docker stats
+
+# Network monitoring
+sudo netstat -tlnp
+
+# Disk usage monitoring
+df -h
+du -sh /home/kloudbugs/kloud-bugs-mining/
+
+# Process monitoring
+ps aux | grep node
+ps aux | grep docker
+```
+
+### Performance Optimization
+```bash
+# Optimize Docker
+docker system prune -f
+docker volume prune -f
+
+# Optimize database
+docker-compose exec postgres psql -U $DB_USER -d $DB_NAME -c "
+REINDEX DATABASE $DB_NAME;
+VACUUM ANALYZE;
+"
+
+# Optimize Redis
+docker-compose exec redis redis-cli FLUSHDB
+```
+
+---
+
+*This guide serves as your complete reference for KLOUD BUGS setup and maintenance. Keep it handy for troubleshooting and daily operations!*

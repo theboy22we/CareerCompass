@@ -1,0 +1,233 @@
+#!/usr/bin/env node
+
+/**
+ * Persistent Claude Assistant for KLOUD BUGS Development
+ * 
+ * This script creates a persistent chat interface with Claude that maintains
+ * conversation history across sessions for continuous development support.
+ */
+
+const fs = require('fs').promises;
+const path = require('path');
+const readline = require('readline');
+const axios = require('axios');
+const chalk = require('chalk');
+
+class PersistentClaudeAssistant {
+    constructor(config = {}) {
+        this.config = {
+            apiKey: config.apiKey || process.env.ANTHROPIC_API_KEY,
+            model: config.model || 'claude-sonnet-4-20250514',
+            maxTokens: config.maxTokens || 4000,
+            temperature: config.temperature || 0.7,
+            conversationFile: config.conversationFile || './kloud-bugs-conversation.json',
+            systemPrompt: this.getSystemPrompt(),
+            ...config
+        };
+        
+        this.conversation = [];
+        this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            prompt: chalk.cyan('🛡️  KLOUD BUGS Assistant > ')
+        });
+        
+        this.setupEventHandlers();
+    }
+    
+    getSystemPrompt() {
+        return `You are a specialized assistant for KLOUD BUGS Mining Command Center development.
+
+CONTEXT: You're helping develop a cryptocurrency mining platform with TERA Guardian AI coordination system on Ubuntu. The user has self-hosted infrastructure and needs ongoing development support.
+
+KEY AREAS:
+- Ubuntu server setup and maintenance
+- Docker containerization and orchestration
+- TERA Guardian AI coordination (TeraMiner, TeraSecure, TeraExchange, TeraCommunity)
+- Blockchain integration and mining optimization
+- Security hardening and monitoring
+- Database optimization (PostgreSQL, Redis)
+- WebSocket communication and real-time coordination
+- API development and authentication
+- Frontend development with cosmic/space theme
+- Performance monitoring and troubleshooting
+
+COMMUNICATION STYLE:
+- Provide step-by-step instructions
+- Include exact commands for Ubuntu terminal
+- Explain technical concepts clearly
+- Offer multiple solution approaches
+- Include troubleshooting tips
+- Reference the comprehensive setup guide when relevant
+
+REMEMBER: This is a persistent conversation - reference previous context and build upon earlier discussions.`;
+    }
+    
+    async initialize() {
+        console.log(chalk.blue('🚀 Initializing KLOUD BUGS Assistant...'));
+        
+        // Check API key
+        if (!this.config.apiKey) {
+            console.log(chalk.red('❌ ANTHROPIC_API_KEY not found!'));
+            console.log(chalk.yellow('Please set your API key:'));
+            console.log(chalk.white('export ANTHROPIC_API_KEY="your-api-key-here"'));
+            process.exit(1);
+        }
+        
+        // Load conversation history
+        await this.loadConversation();
+        
+        // Display welcome message
+        this.displayWelcome();
+        
+        // Start interactive session
+        this.startInteractiveSession();
+    }
+    
+    async loadConversation() {
+        try {
+            const data = await fs.readFile(this.config.conversationFile, 'utf8');
+            this.conversation = JSON.parse(data);
+            console.log(chalk.green(`✅ Loaded ${this.conversation.length} previous messages`));
+        } catch (error) {
+            console.log(chalk.yellow('📝 Starting fresh conversation'));
+            this.conversation = [];
+        }
+    }
+    
+    async saveConversation() {
+        try {
+            await fs.writeFile(
+                this.config.conversationFile, 
+                JSON.stringify(this.conversation, null, 2)
+            );
+        } catch (error) {
+            console.log(chalk.red('⚠️  Failed to save conversation:', error.message));
+        }
+    }
+    
+    displayWelcome() {
+        console.log(chalk.blue('\n🛡️  KLOUD BUGS Mining Command Center Assistant'));
+        console.log(chalk.blue('================================================'));
+        console.log(chalk.white('I\'m here to help with your KLOUD BUGS development!'));
+        console.log(chalk.white('\nSpecial Commands:'));
+        console.log(chalk.yellow('  /help     - Show available commands'));
+        console.log(chalk.yellow('  /status   - Check system status'));
+        console.log(chalk.yellow('  /logs     - View recent logs'));
+        console.log(chalk.yellow('  /deploy   - Deploy KLOUD BUGS'));
+        console.log(chalk.yellow('  /backup   - Create system backup'));
+        console.log(chalk.yellow('  /health   - Run health check'));
+        console.log(chalk.yellow('  /clear    - Clear conversation history'));
+        console.log(chalk.yellow('  /exit     - Exit assistant'));
+        console.log(chalk.white('\nWhat would you like to work on today?\n'));
+    }
+    
+    startInteractiveSession() {
+        this.rl.prompt();
+        
+        this.rl.on('line', async (input) => {
+            const trimmedInput = input.trim();
+            
+            if (trimmedInput === '') {
+                this.rl.prompt();
+                return;
+            }
+            
+            // Handle special commands
+            if (trimmedInput.startsWith('/')) {
+                await this.handleCommand(trimmedInput);
+                this.rl.prompt();
+                return;
+            }
+            
+            // Regular conversation
+            await this.handleMessage(trimmedInput);
+            this.rl.prompt();
+        });
+    }
+    
+    async handleCommand(command) {
+        const [cmd, ...args] = command.slice(1).split(' ');
+        
+        switch (cmd) {
+            case 'help':
+                this.displayHelp();
+                break;
+                
+            case 'status':
+                await this.checkSystemStatus();
+                break;
+                
+            case 'logs':
+                await this.viewLogs(args[0] || 'all');
+                break;
+                
+            case 'deploy':
+                await this.deploySystem();
+                break;
+                
+            case 'backup':
+                await this.createBackup();
+                break;
+                
+            case 'health':
+                await this.runHealthCheck();
+                break;
+                
+            case 'clear':
+                await this.clearConversation();
+                break;
+                
+            case 'exit':
+                await this.exit();
+                break;
+                
+            default:
+                console.log(chalk.red(`Unknown command: ${cmd}`));
+                console.log(chalk.yellow('Type /help for available commands'));
+        }
+    }
+    
+    displayHelp() {
+        console.log(chalk.blue('\n🛠️  Available Commands:'));
+        console.log(chalk.white('  /help                 - Show this help message'));
+        console.log(chalk.white('  /status               - Check Docker containers and system status'));
+        console.log(chalk.white('  /logs [service]       - View logs (all, api, websocket, tera-miner, etc.)'));
+        console.log(chalk.white('  /deploy               - Run deployment script'));
+        console.log(chalk.white('  /backup               - Create system backup'));
+        console.log(chalk.white('  /health               - Run comprehensive health check'));
+        console.log(chalk.white('  /clear                - Clear conversation history'));
+        console.log(chalk.white('  /exit                 - Exit the assistant'));
+        console.log(chalk.yellow('\nDevelopment Topics I can help with:'));
+        console.log(chalk.white('  • Ubuntu server configuration and troubleshooting'));
+        console.log(chalk.white('  • Docker containerization and orchestration'));
+        console.log(chalk.white('  • TERA Guardian AI coordination system'));
+        console.log(chalk.white('  • Database optimization and queries'));
+        console.log(chalk.white('  • API development and security'));
+        console.log(chalk.white('  • Frontend development and cosmic UI'));
+        console.log(chalk.white('  • Mining optimization and blockchain integration'));
+        console.log(chalk.white('  • Performance monitoring and debugging\n'));
+    }
+    
+    async checkSystemStatus() {
+        console.log(chalk.blue('🔍 Checking KLOUD BUGS system status...'));
+        
+        try {
+            // Check if Docker is running
+            const { exec } = require('child_process');
+            const { promisify } = require('util');
+            const execAsync = promisify(exec);
+            
+            const { stdout } = await execAsync('docker-compose ps --format "table {{.Name}}\\t{{.Status}}"');
+            console.log(chalk.green('🐳 Docker Containers:'));
+            console.log(stdout);
+            
+            // Check system resources
+            const { stdout: memInfo } = await execAsync('free -h');
+            const { stdout: diskInfo } = await execAsync('df -h /');
+            
+            console.log(chalk.green('💻 System Resources:'));
+            console.log('Memory Usage:');
+            console.log(memInfo);
+            console.log('Disk Usage:');
+            console.log(diskInfo);

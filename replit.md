@@ -2,14 +2,15 @@
 
 ## Overview
 
-KLOUD BOT PRO is an advanced AI-powered Bitcoin trading bot with a cosmic-themed interface. The application combines real-time market analysis, machine learning predictions, and automated trading capabilities. It features a sophisticated React frontend with a Node.js/Express backend, utilizing WebSocket connections for real-time data streaming and PostgreSQL for persistent storage.
+KLOUD BOT PRO is an advanced AI-powered trading and mining management platform with a cosmic-themed interface. The application combines real-time market analysis, machine learning predictions, automated trading capabilities, and comprehensive mining operation management. It features a sophisticated React frontend with a Node.js/Express backend, utilizing WebSocket connections for real-time data streaming and PostgreSQL for persistent storage.
 
-The system is designed as a comprehensive trading platform that provides technical analysis, AI-driven predictions, portfolio management, and automated trading execution. The cosmic theme creates an immersive user experience with space-inspired visual elements and animations.
+The system is designed as a comprehensive platform that provides technical analysis, AI-driven predictions, portfolio management, automated trading execution, mining operation monitoring, and social justice token management. The platform supports the user's crypto mining business and their social justice token initiative for community impact projects. The cosmic theme creates an immersive user experience with space-inspired visual elements and animations.
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
 AI Strategy: Building own custom AI models rather than using third-party providers like OpenAI/Anthropic.
+Business Focus: Crypto mining operations, platform management, and social justice token for community impact projects.
 
 ## System Architecture
 
