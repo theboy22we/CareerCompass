@@ -561,7 +561,26 @@
 }
 /* Prevent page transitions and fading issues */
 * {
-  transition-duration: 150ms !important;
+  transition: none !important;
+}
+
+/* Disable all animations that cause fading */
+.fade, .fade-in, .fade-out, [data-state="open"], [data-state="closed"] {
+  opacity: 1 !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Ensure stable page rendering */
+body, html, #root {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Disable Radix UI animations */
+[data-radix-popper-content-wrapper] {
+  animation: none !important;
+  transition: none !important;
 }
 
 /* Stabilize WebSocket connection indicators */

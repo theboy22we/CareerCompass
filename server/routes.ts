@@ -40,8 +40,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ws.ping();
       } else {
         clearInterval(heartbeat);
+        clients.delete(ws);
       }
-    }, 30000);
+    }, 45000); // Increased to 45 seconds to reduce overhead
 
     ws.on('pong', () => {
       // Connection is alive

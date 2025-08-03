@@ -20,12 +20,12 @@ export function useWebSocket(url: string, onMessage: (message: any) => void) {
         setIsConnected(true);
         reconnectAttemptsRef.current = 0;
         
-        // Set up client-side heartbeat
+        // Set up client-side heartbeat with longer interval
         heartbeatRef.current = setInterval(() => {
           if (ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ type: 'ping' }));
           }
-        }, 30000);
+        }, 60000); // Increased to 60 seconds
       };
       
       ws.onmessage = (event) => {
@@ -47,10 +47,10 @@ export function useWebSocket(url: string, onMessage: (message: any) => void) {
           clearInterval(heartbeatRef.current);
         }
         
-        // Attempt to reconnect with exponential backoff
+        // Attempt to reconnect with longer delays to prevent rapid cycling
         if (reconnectAttemptsRef.current < maxReconnectAttempts) {
           reconnectAttemptsRef.current++;
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000);
+          const delay = 5000; // Fixed 5 second delay to prevent rapid reconnections
           
           reconnectTimeoutRef.current = setTimeout(() => {
             console.log(`Attempting to reconnect... (${reconnectAttemptsRef.current}/${maxReconnectAttempts})`);

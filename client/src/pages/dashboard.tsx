@@ -11,7 +11,7 @@ import { MarketSentimentPanel } from '@/components/market-sentiment-panel';
 import { SimpleLiveChart } from '@/components/simple-live-chart';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { MarketSelector } from '@/components/market-selector';
-import { useWebSocket } from '@/hooks/use-websocket';
+import { useStableWebSocket } from '@/hooks/use-stable-websocket';
 import { audioAlerts } from '@/lib/audio-alerts';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -124,8 +124,8 @@ export default function Dashboard() {
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
-  // WebSocket connection for real-time updates
-  const { isConnected } = useWebSocket('/ws', (message) => {
+  // WebSocket connection for real-time updates with stable connection
+  const { isConnected } = useStableWebSocket('/ws', (message) => {
     handleWebSocketMessage(message);
   });
 

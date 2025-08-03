@@ -21,7 +21,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="kloud-bot-theme">
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <div className="min-h-screen bg-background text-foreground">
+          <div className="min-h-screen bg-background text-foreground" style={{ opacity: 1, transition: 'none' }}>
             <Toaster />
             <Router />
           </div>
