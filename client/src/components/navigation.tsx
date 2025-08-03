@@ -6,6 +6,7 @@ import {
   Ghost, 
   Pickaxe, 
   Database, 
+  Wallet,
   Home,
   Menu,
   X
@@ -14,6 +15,7 @@ import { useState } from 'react';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: Home },
+  { name: 'Portfolio', href: '/crypto-portfolio', icon: Wallet },
   { name: 'Ghost AI', href: '/ghost-ai', icon: Ghost },
   { name: 'Mining Rigs', href: '/mining-rigs', icon: Pickaxe },
   { name: 'Custom Pools', href: '/custom-pools', icon: Database },

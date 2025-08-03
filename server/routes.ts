@@ -1054,6 +1054,105 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Crypto Portfolio endpoints
+  app.get('/api/crypto/portfolio', async (req, res) => {
+    try {
+      const portfolio = [
+        {
+          symbol: 'BTC',
+          name: 'Bitcoin',
+          balance: 0.15423,
+          value: 6632.99,
+          change24h: 2.45,
+          source: 'mining',
+          availableForTrading: 0.15423,
+          locked: 0
+        },
+        {
+          symbol: 'ETH',
+          name: 'Ethereum',
+          balance: 2.8945,
+          value: 7238.75,
+          change24h: -1.23,
+          source: 'mining',
+          availableForTrading: 2.8945,
+          locked: 0
+        },
+        {
+          symbol: 'TERA',
+          name: 'TERA Token',
+          balance: 125000.50,
+          value: 62500.25,
+          change24h: 8.75,
+          source: 'tera',
+          availableForTrading: 75000.00,
+          locked: 50000.50
+        },
+        {
+          symbol: 'LTC',
+          name: 'Litecoin',
+          balance: 12.456,
+          value: 1089.45,
+          change24h: 0.89,
+          source: 'mining',
+          availableForTrading: 12.456,
+          locked: 0
+        }
+      ];
+      res.json(portfolio);
+    } catch (error) {
+      console.error('Error fetching crypto portfolio:', error);
+      res.status(500).json({ error: 'Failed to fetch crypto portfolio' });
+    }
+  });
+
+  app.get('/api/trading/status', async (req, res) => {
+    try {
+      const status = {
+        activeTrades: 2,
+        totalProfit: 1245.67,
+        successRate: 78.5,
+        runningStrategies: {
+          'BTC': { status: 'active', profit: 423.12, trades: 15 },
+          'ETH': { status: 'active', profit: 822.55, trades: 23 }
+        }
+      };
+      res.json(status);
+    } catch (error) {
+      console.error('Error fetching trading status:', error);
+      res.status(500).json({ error: 'Failed to fetch trading status' });
+    }
+  });
+
+  app.post('/api/trading/start', async (req, res) => {
+    try {
+      const { symbol, config } = req.body;
+      // Mock starting trading
+      res.json({ 
+        success: true, 
+        message: `Trading started for ${symbol}`,
+        tradingId: `trade-${Date.now()}`
+      });
+    } catch (error) {
+      console.error('Error starting trading:', error);
+      res.status(500).json({ error: 'Failed to start trading' });
+    }
+  });
+
+  app.put('/api/trading/config', async (req, res) => {
+    try {
+      const { symbol, config } = req.body;
+      // Mock updating trading config
+      res.json({ 
+        success: true, 
+        message: `Trading config updated for ${symbol}`
+      });
+    } catch (error) {
+      console.error('Error updating trading config:', error);
+      res.status(500).json({ error: 'Failed to update trading config' });
+    }
+  });
+
   // Mining and Social Impact endpoints
   app.get('/api/mining/operations', async (req, res) => {
     try {

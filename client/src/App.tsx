@@ -9,6 +9,7 @@ import Dashboard from "@/pages/dashboard";
 import GhostAI from "@/pages/ghost-ai";
 import MiningRigs from "@/pages/mining-rigs";
 import CustomPools from "@/pages/custom-pools";
+import CryptoPortfolio from "@/pages/crypto-portfolio";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -34,6 +35,7 @@ function Router() {
           <Route path="/ghost-ai" component={GhostAI} />
           <Route path="/mining-rigs" component={MiningRigs} />
           <Route path="/custom-pools" component={CustomPools} />
+          <Route path="/crypto-portfolio" component={CryptoPortfolio} />
           <Route component={NotFound} />
         </Switch>
       </main>
