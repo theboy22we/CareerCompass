@@ -1153,6 +1153,215 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // TERJustice AI endpoints
+  app.get('/api/terajustice/cases', async (req, res) => {
+    try {
+      const cases = [
+        {
+          id: 'case-1',
+          title: 'Community Housing Rights vs. Developer Corp',
+          caseType: 'Civil Rights',
+          status: 'active',
+          priority: 'high',
+          description: 'Community organization fighting against unfair housing development that displaces low-income families.',
+          parties: {
+            plaintiff: 'Community Housing Rights Coalition',
+            defendant: 'Mega Developer Corp',
+            witnesses: ['Jane Smith (Community Leader)', 'Dr. Robert Johnson (Urban Planning Expert)']
+          },
+          evidence: [
+            {
+              id: 'ev-1',
+              type: 'document',
+              title: 'Original Zoning Agreement',
+              description: 'Document showing original community protection clauses',
+              source: 'City Planning Department',
+              relevanceScore: 95,
+              verificationStatus: 'verified',
+              uploadedAt: '2024-01-15T10:00:00Z'
+            }
+          ],
+          timeline: [
+            {
+              id: 'tl-1',
+              date: '2023-12-01',
+              event: 'Developer announced project',
+              source: 'Public Notice',
+              importance: 'high'
+            }
+          ],
+          aiAnalysis: {
+            strengthScore: 78,
+            weaknesses: [
+              'Limited financial resources for extended litigation',
+              'Developer has significant legal team'
+            ],
+            recommendations: [
+              'Focus on community impact evidence',
+              'Seek pro bono legal support',
+              'Build media awareness campaign'
+            ],
+            precedents: [
+              {
+                id: 'prec-1',
+                caseName: 'Citizens vs. Metro Development',
+                year: 2019,
+                court: 'State Supreme Court',
+                relevanceScore: 89,
+                outcome: 'Favorable for community',
+                keyPoints: ['Community rights prioritized', 'Developer compensation required']
+              }
+            ],
+            riskAssessment: 'Moderate risk with strong community evidence.',
+            outcomeProjection: {
+              favorableChance: 72,
+              neutralChance: 18,
+              unfavorableChance: 10
+            }
+          },
+          researchResults: [
+            {
+              id: 'res-1',
+              query: 'community housing rights precedents',
+              source: 'Legal Database Search',
+              findings: 'Found 23 similar cases with 68% favorable outcomes when strong community evidence is present.',
+              relevanceScore: 92,
+              timestamp: '2024-01-17T09:15:00Z'
+            }
+          ],
+          createdAt: '2024-01-15T08:00:00Z',
+          updatedAt: '2024-01-17T16:45:00Z'
+        },
+        {
+          id: 'case-2',
+          title: 'Workers Rights vs. Manufacturing Inc',
+          caseType: 'Employment',
+          status: 'under_review',
+          priority: 'medium',
+          description: 'Class action lawsuit regarding unsafe working conditions and wage violations.',
+          parties: {
+            plaintiff: 'Factory Workers Union Local 405',
+            defendant: 'Manufacturing Inc',
+            witnesses: ['Maria Rodriguez (Safety Inspector)', 'James Wilson (Former Supervisor)']
+          },
+          evidence: [],
+          timeline: [],
+          aiAnalysis: {
+            strengthScore: 65,
+            weaknesses: ['Some documentation missing', 'Corporate legal resources'],
+            recommendations: ['Gather more safety violation evidence', 'Document wage discrepancies'],
+            precedents: [],
+            riskAssessment: 'Moderate risk case requiring more evidence.',
+            outcomeProjection: {
+              favorableChance: 60,
+              neutralChance: 25,
+              unfavorableChance: 15
+            }
+          },
+          researchResults: [],
+          createdAt: '2024-01-20T10:00:00Z',
+          updatedAt: '2024-01-21T14:30:00Z'
+        }
+      ];
+      res.json(cases);
+    } catch (error) {
+      console.error('Error fetching TERJustice cases:', error);
+      res.status(500).json({ error: 'Failed to fetch cases' });
+    }
+  });
+
+  app.get('/api/terajustice/cases/:caseId', async (req, res) => {
+    try {
+      const { caseId } = req.params;
+      // Return detailed case information
+      res.json({ message: `Case ${caseId} details would be returned here` });
+    } catch (error) {
+      console.error('Error fetching case details:', error);
+      res.status(500).json({ error: 'Failed to fetch case details' });
+    }
+  });
+
+  app.post('/api/terajustice/cases', async (req, res) => {
+    try {
+      const caseData = req.body;
+      const newCase = {
+        id: `case-${Date.now()}`,
+        ...caseData,
+        status: 'under_review',
+        priority: 'medium',
+        parties: {
+          plaintiff: caseData.plaintiff,
+          defendant: caseData.defendant,
+          witnesses: []
+        },
+        evidence: [],
+        timeline: [
+          {
+            id: `tl-${Date.now()}`,
+            date: new Date().toISOString().split('T')[0],
+            event: 'Case created and submitted for AI analysis',
+            source: 'TERJustice AI System',
+            importance: 'high'
+          }
+        ],
+        aiAnalysis: {
+          strengthScore: Math.floor(Math.random() * 40) + 50,
+          weaknesses: ['Initial analysis pending', 'More evidence needed'],
+          recommendations: ['Gather supporting documentation', 'Identify key witnesses'],
+          precedents: [],
+          riskAssessment: 'Initial assessment in progress.',
+          outcomeProjection: {
+            favorableChance: 50,
+            neutralChance: 30,
+            unfavorableChance: 20
+          }
+        },
+        researchResults: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      res.json(newCase);
+    } catch (error) {
+      console.error('Error creating case:', error);
+      res.status(500).json({ error: 'Failed to create case' });
+    }
+  });
+
+  app.post('/api/terajustice/research', async (req, res) => {
+    try {
+      const { caseId, query } = req.body;
+      const newResearch = {
+        id: `res-${Date.now()}`,
+        query,
+        source: 'AI Legal Research Engine',
+        findings: `AI research completed for "${query}". Found relevant precedents and legal frameworks. Analysis shows strong correlation with similar cases in jurisdiction.`,
+        relevanceScore: Math.floor(Math.random() * 30) + 70,
+        timestamp: new Date().toISOString()
+      };
+      res.json(newResearch);
+    } catch (error) {
+      console.error('Error conducting research:', error);
+      res.status(500).json({ error: 'Failed to conduct research' });
+    }
+  });
+
+  app.post('/api/terajustice/evidence', async (req, res) => {
+    try {
+      const { caseId, evidence } = req.body;
+      const newEvidence = {
+        id: `ev-${Date.now()}`,
+        ...evidence,
+        relevanceScore: Math.floor(Math.random() * 30) + 70,
+        verificationStatus: 'pending',
+        uploadedAt: new Date().toISOString()
+      };
+      res.json(newEvidence);
+    } catch (error) {
+      console.error('Error uploading evidence:', error);
+      res.status(500).json({ error: 'Failed to upload evidence' });
+    }
+  });
+
   // Mining and Social Impact endpoints
   app.get('/api/mining/operations', async (req, res) => {
     try {

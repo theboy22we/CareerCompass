@@ -10,6 +10,7 @@ import GhostAI from "@/pages/ghost-ai";
 import MiningRigs from "@/pages/mining-rigs";
 import CustomPools from "@/pages/custom-pools";
 import CryptoPortfolio from "@/pages/crypto-portfolio";
+import TERJusticeAI from "@/pages/terajustice-ai";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -36,6 +37,7 @@ function Router() {
           <Route path="/mining-rigs" component={MiningRigs} />
           <Route path="/custom-pools" component={CustomPools} />
           <Route path="/crypto-portfolio" component={CryptoPortfolio} />
+          <Route path="/terajustice-ai" component={TERJusticeAI} />
           <Route component={NotFound} />
         </Switch>
       </main>
