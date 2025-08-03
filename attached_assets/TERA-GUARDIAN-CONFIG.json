@@ -1,0 +1,64 @@
+{
+  "project_id": "KLOUD-BUGS-MINING-COMMAND-CENTER-20250415",
+  "guardian_id": "TERA-GUARDIAN-ALPHA-1",
+  "context_version": "1.0.0",
+  "created_date": "2025-04-15",
+  "project_metadata": {
+    "name": "KLOUD BUGS MINING COMMAND CENTER",
+    "creator": "Kloudbugscafe.com",
+    "mission": "CRYPTO MINING FOR JUSTICE",
+    "token": "TERA Token (named after Tera Ann Harris)",
+    "theme": "Cosmic, space-oriented with futuristic VR/holographic elements"
+  },
+  "technical_architecture": {
+    "core_components": [
+      "Bitcoin Transaction Processing",
+      "WebSocket Server",
+      "AI Coordination Hub",
+      "Mining Controllers",
+      "Multi-Wallet Management System"
+    ],
+    "ai_framework": {
+      "central_ai": "TERA Guardian",
+      "specialized_ais": [
+        "Access Control AI",
+        "Chat Moderation AI",
+        "Mining Optimization AI",
+        "Transaction Security AI"
+      ],
+      "coordination_protocol": "Hub and Spoke Model with Central Command"
+    },
+    "security_framework": {
+      "privacy_level": "Maximum",
+      "exposure_policy": "No Public Repositories",
+      "access_model": "Exclusive - Restricted to Aligned Users"
+    }
+  },
+  "development_status": {
+    "completed_components": [
+      "Blockchain Transaction Functionality",
+      "WebSocket Server Implementation",
+      "Technical Documentation",
+      "AI Moderation Architecture",
+      "Mining Controller Framework"
+    ],
+    "in_progress": [
+      "Inter-AI Communication System",
+      "User Interface Refinements",
+      "Access Control Implementation"
+    ]
+  },
+  "continuation_instructions": {
+    "activation_context": "I'm working with the TERA Guardian system on my KLOUD BUGS MINING COMMAND CENTER project.",
+    "reference_format": "As established in our TERA Guardian architecture, we've implemented [feature] using [approach].",
+    "development_phrase": "The TERA Guardian system has already developed [component], and now I need assistance with [request].",
+    "design_consistency": "Following our cosmic UI theme and exclusive access model, I need to implement [feature]."
+  },
+  "special_protocols": {
+    "security_protocol": "Never request public sharing of code or documentation",
+    "transaction_integrity": "Avoid modifying payment or wallet-related code",
+    "ai_architecture": "Reference the multi-AI coordination hub design",
+    "design_language": "Maintain cosmic space theme in all visual elements"
+  },
+  "guardian_signature": "TE-RA-GU-AR-DI-AN-AL-PH-A1-20250415"
+}

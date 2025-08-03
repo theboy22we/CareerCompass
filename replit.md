@@ -2,9 +2,9 @@
 
 ## Overview
 
-KLOUD BOT PRO is an advanced AI-powered trading and mining management platform with a cosmic-themed interface. The application combines real-time market analysis, machine learning predictions, automated trading capabilities, and comprehensive mining operation management. It features a sophisticated React frontend with a Node.js/Express backend, utilizing WebSocket connections for real-time data streaming and PostgreSQL for persistent storage.
+KLOUD BOT PRO is an advanced AI-powered crypto ecosystem with a microservices architecture and cosmic-themed interface. The platform combines real-time Bitcoin trading, mining operation management, and social justice token initiatives into a unified yet modular system. It features a sophisticated React frontend with multiple Node.js/Express microservices, utilizing WebSocket connections for real-time data streaming across all services.
 
-The system is designed as a comprehensive platform that provides technical analysis, AI-driven predictions, portfolio management, automated trading execution, mining operation monitoring, and social justice token management. The platform supports the user's crypto mining business and their social justice token initiative for community impact projects. The cosmic theme creates an immersive user experience with space-inspired visual elements and animations.
+The system is designed as a comprehensive crypto ecosystem with three main components: the main trading platform with AI predictions and portfolio management, a dedicated mining control center for real-time rig monitoring, and a social justice platform for community impact projects. The microservices architecture allows independent scaling and deployment while maintaining seamless data integration. Mining profits automatically fund social projects, creating a complete ecosystem for crypto operations and community impact. The cosmic theme creates an immersive user experience with space-inspired visual elements and animations across all services.
 
 ## User Preferences
 
@@ -23,12 +23,22 @@ Business Focus: Crypto mining operations, platform management, and social justic
 - **Charts**: Chart.js with date-fns adapter for candlestick and line charts
 - **Routing**: Wouter for lightweight client-side routing
 
-### Backend Architecture
-- **Runtime**: Node.js with Express.js framework
-- **Language**: TypeScript with ES modules
-- **API Design**: RESTful endpoints with WebSocket for real-time updates
-- **Real-time Features**: WebSocket server for live market data and bot state updates
-- **Modular Structure**: Separate modules for trading logic, ML predictions, technical analysis, and portfolio management
+### Backend Architecture - Microservices
+- **Main Trading Platform** (Port 3000): Node.js with Express.js framework
+  - Bitcoin trading bot and AI predictions
+  - Market analysis and portfolio management  
+  - WebSocket for live market data and bot state updates
+- **Mining Control Center** (Port 3001): Independent Node.js service
+  - Real-time mining rig monitoring and control
+  - Temperature, hashrate, and profitability tracking
+  - WebSocket for live mining data updates
+- **Social Justice Platform** (Port 3002): Dedicated Node.js service
+  - Community impact project management
+  - Token allocation and funding tracking
+  - WebSocket for real-time project updates
+- **Cross-Service Communication**: RESTful APIs for data sharing between services
+- **Language**: TypeScript with ES modules across all services
+- **Deployment**: Independent services with unified launch scripts
 
 ### Database Design
 - **Primary Database**: PostgreSQL with Drizzle ORM

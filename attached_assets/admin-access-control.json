@@ -1,0 +1,34 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-04-15T12:00:00Z",
+  "accessControl": {
+    "ownerOnly": [
+      "/api/cloud-miner/config/reset",
+      "/api/cloud-miner/access-key/regenerate",
+      "/api/admin/guardian/core-access",
+      "/api/admin/system/security-override"
+    ],
+    "adminOnly": [
+      "/api/cloud-miner/config/update",
+      "/api/admin/users/manage",
+      "/api/admin/mining/force-reset",
+      "/api/admin/token/adjust-generation"
+    ],
+    "premiumOnly": [
+      "/api/ai-mining/device/:deviceId/optimization",
+      "/api/tera-token/generation-rate"
+    ]
+  },
+  "securitySettings": {
+    "maximumFailedAttempts": 5,
+    "lockoutDurationMinutes": 30,
+    "requireTwoFactorForAdmin": true,
+    "requireEncryptedConnections": true,
+    "allowRemoteAccess": false,
+    "accessLogRetentionDays": 90
+  },
+  "ownerContactInfo": {
+    "encrypted": true,
+    "data": "U2FsdGVkX19+8vj2z3q4n5hKJWRBHzV4M7PBCR0FAB8jcELJHMlvOmj1UEv+4nlsQzfJf3jp/ZaZ8rlSm0Y1gg=="
+  }
+}
