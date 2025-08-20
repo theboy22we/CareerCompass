@@ -376,9 +376,9 @@ export default function Dashboard() {
     <div className="min-h-screen bg-background">
       <div className="flex h-screen">
         {/* Left Sidebar */}
-        <div className="w-80 bg-card border-r border-border flex flex-col">
+        <div className="mobile-sidebar bg-card border-r border-border flex flex-col">
           {/* Header - Cosmic Theme */}
-          <div className="p-6 border-b border-border cosmic-card">
+          <div className="mobile-compact-card border-b border-border cosmic-card">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center relative overflow-hidden">
@@ -400,28 +400,28 @@ export default function Dashboard() {
             </div>
 
             {/* Wallet Stats */}
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <div className="cosmic-card p-3 border border-border/50">
-                <div className="text-xs text-muted-foreground mb-1" style={{fontFamily: 'Rajdhani'}}>Portfolio Balance</div>
-                <div className="text-lg font-bold text-accent" style={{fontFamily: 'Orbitron'}}>
+            <div className="mobile-grid-2 mobile-compact-grid mb-2 sm:mb-4">
+              <div className="cosmic-card mobile-compact-card border border-border/50">
+                <div className="text-xs text-muted-foreground mb-1 mobile-card" style={{fontFamily: 'Rajdhani'}}>Portfolio Balance</div>
+                <div className="text-sm sm:text-lg font-bold text-accent mobile-header" style={{fontFamily: 'Orbitron'}}>
                   ${(performance?.totalValue || 10000).toLocaleString()}
                 </div>
               </div>
-              <div className="cosmic-card p-3 border border-border/50">
-                <div className="text-xs text-muted-foreground mb-1" style={{fontFamily: 'Rajdhani'}}>Today's PnL</div>
-                <div className={`text-lg font-bold ${(performance?.dailyPnl || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`} style={{fontFamily: 'Orbitron'}}>
+              <div className="cosmic-card mobile-compact-card border border-border/50">
+                <div className="text-xs text-muted-foreground mb-1 mobile-card" style={{fontFamily: 'Rajdhani'}}>Today's PnL</div>
+                <div className={`text-sm sm:text-lg font-bold mobile-header ${(performance?.dailyPnl || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`} style={{fontFamily: 'Orbitron'}}>
                   {(performance?.dailyPnl || 0) >= 0 ? '+' : ''}${(performance?.dailyPnl || 0).toFixed(2)}
                 </div>
               </div>
-              <div className="cosmic-card p-3 border border-border/50">
-                <div className="text-xs text-muted-foreground mb-1" style={{fontFamily: 'Rajdhani'}}>Available</div>
-                <div className="text-sm font-bold text-primary" style={{fontFamily: 'Orbitron'}}>
+              <div className="cosmic-card mobile-compact-card border border-border/50">
+                <div className="text-xs text-muted-foreground mb-1 mobile-card" style={{fontFamily: 'Rajdhani'}}>Available</div>
+                <div className="text-xs sm:text-sm font-bold text-primary mobile-header" style={{fontFamily: 'Orbitron'}}>
                   ${(performance?.availableBalance || 8500).toLocaleString()}
                 </div>
               </div>
-              <div className="cosmic-card p-3 border border-border/50">
-                <div className="text-xs text-muted-foreground mb-1" style={{fontFamily: 'Rajdhani'}}>Total PnL</div>
-                <div className={`text-sm font-bold ${(performance?.totalPnl || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`} style={{fontFamily: 'Orbitron'}}>
+              <div className="cosmic-card mobile-compact-card border border-border/50">
+                <div className="text-xs text-muted-foreground mb-1 mobile-card" style={{fontFamily: 'Rajdhani'}}>Total PnL</div>
+                <div className={`text-xs sm:text-sm font-bold mobile-header ${(performance?.totalPnl || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`} style={{fontFamily: 'Orbitron'}}>
                   {(performance?.totalPnl || 0) >= 0 ? '+' : ''}${(performance?.totalPnl || 0).toFixed(2)}
                 </div>
               </div>
@@ -441,7 +441,7 @@ export default function Dashboard() {
               className="mb-4"
             />
             {/* Connection Status */}
-            <div className="p-6 border-t border-border">
+            <div className="mobile-compact-card border-t border-border">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">Connection</span>
                 <div className="flex items-center space-x-2">
@@ -473,7 +473,7 @@ export default function Dashboard() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {/* Top Bar */}
-          <div className="bg-card border-b border-border p-4">
+          <div className="bg-card border-b border-border mobile-compact">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 {/* Bitcoin Price */}
@@ -546,12 +546,12 @@ export default function Dashboard() {
           </div>
 
           {/* Live Trading Charts Section */}
-          <div className="p-6 space-y-6">
+          <div className="mobile-compact mobile-compact-space">
             {/* Main Live Trading Chart */}
             <SimpleLiveChart className="w-full" />
             
             {/* Analytics Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="mobile-grid-3 mobile-compact-grid">
               <MarketSentimentPanel className="w-full" />
               <AIPredictionPanel className="w-full" />
               <AutoTradingPanel 
@@ -586,7 +586,7 @@ export default function Dashboard() {
           {/* Legacy Chart and Analytics */}
           <div className="flex-1 flex border-t border-border">
             {/* Chart Area */}
-            <div className="flex-1 p-6">
+            <div className="flex-1 mobile-compact">
               <TradingChart
                 priceData={priceHistory}
                 tradeMarkers={tradeMarkers}
@@ -595,7 +595,7 @@ export default function Dashboard() {
             </div>
 
             {/* Right Panel */}
-            <div className="w-96 p-6 space-y-6 border-l border-border overflow-y-auto custom-scrollbar">
+            <div className="w-full sm:w-80 lg:w-96 mobile-compact mobile-compact-space border-l border-border overflow-y-auto custom-scrollbar">
               {/* AI Prediction Panel */}
               <AIPredictionPanel />
 

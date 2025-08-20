@@ -56,41 +56,41 @@ export function PerformanceMetrics({
   };
 
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`mobile-compact-space ${className}`}>
       {/* Overall Performance */}
       <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
+        <CardHeader className="mobile-compact-card">
+          <CardTitle className="flex items-center space-x-2 mobile-header">
             <i className="fas fa-chart-line text-blue-400" />
             <span>Performance Overview</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-700 rounded-lg p-3">
-              <div className="text-sm text-gray-400 mb-1">Portfolio Value</div>
-              <div className="text-xl font-bold text-white">
+        <CardContent className="mobile-compact-card">
+          <div className="mobile-grid-2 mobile-compact-grid">
+            <div className="bg-gray-700 rounded-lg mobile-compact-card">
+              <div className="text-xs sm:text-sm text-gray-400 mb-1 mobile-card">Portfolio Value</div>
+              <div className="text-sm sm:text-xl font-bold text-white mobile-header">
                 ${performance.portfolioValue.toLocaleString()}
               </div>
             </div>
 
-            <div className="bg-gray-700 rounded-lg p-3">
-              <div className="text-sm text-gray-400 mb-1">Total Trades</div>
-              <div className="text-xl font-bold text-white">
+            <div className="bg-gray-700 rounded-lg mobile-compact-card">
+              <div className="text-xs sm:text-sm text-gray-400 mb-1 mobile-card">Total Trades</div>
+              <div className="text-sm sm:text-xl font-bold text-white mobile-header">
                 {performance.totalTrades}
               </div>
             </div>
 
-            <div className="bg-gray-700 rounded-lg p-3">
-              <div className="text-sm text-gray-400 mb-1">Win Rate</div>
-              <div className={`text-xl font-bold ${winRateColor}`}>
+            <div className="bg-gray-700 rounded-lg mobile-compact-card">
+              <div className="text-xs sm:text-sm text-gray-400 mb-1 mobile-card">Win Rate</div>
+              <div className={`text-sm sm:text-xl font-bold mobile-header ${winRateColor}`}>
                 {performance.winRate.toFixed(1)}%
               </div>
             </div>
 
-            <div className="bg-gray-700 rounded-lg p-3">
-              <div className="text-sm text-gray-400 mb-1">Winning Trades</div>
-              <div className="text-xl font-bold text-green-400">
+            <div className="bg-gray-700 rounded-lg mobile-compact-card">
+              <div className="text-xs sm:text-sm text-gray-400 mb-1 mobile-card">Winning Trades</div>
+              <div className="text-sm sm:text-xl font-bold text-green-400 mobile-header">
                 {performance.winningTrades}
               </div>
             </div>
@@ -100,29 +100,29 @@ export function PerformanceMetrics({
 
       {/* Recent Performance */}
       <Card className="bg-gray-800 border-gray-700">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
+        <CardHeader className="mobile-compact-card">
+          <CardTitle className="flex items-center space-x-2 mobile-header">
             <i className="fas fa-clock text-green-400" />
             <span>Recent Performance</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className="mobile-compact-card">
+          <div className="mobile-compact-space">
             {/* 24h Performance */}
-            <div className="bg-gray-700 rounded-lg p-4">
+            <div className="bg-gray-700 rounded-lg mobile-compact-card">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-gray-400">Last 24 Hours</span>
-                <span className={`font-semibold ${profitColor(performance.profitLast24h)}`}>
+                <span className="text-xs sm:text-sm text-gray-400 mobile-card">Last 24 Hours</span>
+                <span className={`font-semibold text-sm sm:text-base mobile-header ${profitColor(performance.profitLast24h)}`}>
                   {formatProfit(performance.profitLast24h)}
                 </span>
               </div>
-              <div className="text-xs text-gray-400">
+              <div className="text-xs text-gray-400 mobile-card">
                 {performance.tradesLast24h} trades executed
               </div>
             </div>
 
             {/* 1h Performance */}
-            <div className="bg-gray-700 rounded-lg p-4">
+            <div className="bg-gray-700 rounded-lg mobile-compact-card">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-gray-400">Last Hour</span>
                 <span className={`font-semibold ${profitColor(performance.profitLastHour)}`}>
