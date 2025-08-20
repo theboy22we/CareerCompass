@@ -4,48 +4,29 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Navigation } from "@/components/navigation";
-import Dashboard from "@/pages/dashboard";
+import { NavigationBar } from "@/components/layout/navigation-bar";
+import TradingDashboard from "@/pages/trading-dashboard";
+import PerformanceDashboard from "@/pages/performance-dashboard";
+import MiningOperations from "@/pages/mining-operations";
+import SocialImpact from "@/pages/social-impact";
 import GhostAI from "@/pages/ghost-ai";
-import MiningRigs from "@/pages/mining-rigs";
-import CustomPools from "@/pages/custom-pools";
-import CryptoPortfolio from "@/pages/crypto-portfolio";
-import TERJusticeAI from "@/pages/terajustice-ai";
-import Cafe from "@/pages/cafe";
-import TeraToken from "@/pages/tera-token";
-import Platform from "@/pages/platform";
-import AdminJournal from "@/pages/admin-journal";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
-    <div className="space-y-6">
-      {/* Header with Navigation */}
-      <header className="flex items-center justify-between p-4 border-b">
-        <div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-            KLOUD BOT PRO
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Advanced AI-Powered Crypto Trading Ecosystem
-          </p>
-        </div>
-        <Navigation />
-      </header>
+    <div className="min-h-screen bg-background">
+      {/* Navigation Bar */}
+      <NavigationBar />
 
       {/* Main Content */}
-      <main className="px-4">
+      <main className="mobile-compact">
         <Switch>
-          <Route path="/" component={Dashboard} />
-          <Route path="/ghost-ai" component={GhostAI} />
-          <Route path="/mining-rigs" component={MiningRigs} />
-          <Route path="/custom-pools" component={CustomPools} />
-          <Route path="/crypto-portfolio" component={CryptoPortfolio} />
-          <Route path="/terajustice-ai" component={TERJusticeAI} />
-          <Route path="/cafe" component={Cafe} />
-          <Route path="/tera-token" component={TeraToken} />
-          <Route path="/platform" component={Platform} />
-          <Route path="/admin-journal" component={AdminJournal} />
+          <Route path="/" component={TradingDashboard} />
+          <Route path="/dashboard" component={TradingDashboard} />
+          <Route path="/performance" component={PerformanceDashboard} />
+          <Route path="/mining" component={MiningOperations} />
+          <Route path="/social-impact" component={SocialImpact} />
+          <Route path="/ai-manager" component={GhostAI} />
           <Route component={NotFound} />
         </Switch>
       </main>
